@@ -40,6 +40,13 @@ body{
 
 /* 頁首 */
 .head{display:flex;align-items:center;gap:8px;flex:0 0 auto;padding:0 2px 6px}
+.back{
+  width:30px;height:30px;flex:0 0 auto;border-radius:99px;
+  background:#F3E7D5;color:var(--ink-soft);text-decoration:none;
+  display:flex;align-items:center;justify-content:center;
+  font-size:19px;font-weight:800;line-height:1;padding-bottom:2px;
+}
+.back[hidden]{display:none}
 .title{font-size:15px;font-weight:800;letter-spacing:.5px}
 .title small{display:block;font-size:10px;font-weight:500;color:var(--ink-soft);letter-spacing:1px}
 .src-badge{
@@ -167,6 +174,7 @@ input[type=range]{width:78px;accent-color:var(--accent)}
 <div class="book">
 
   <div class="head">
+    <a class="back" id="back" href="../../index.html" hidden aria-label="回書架">‹</a>
     <div class="title">小豆的勇氣<small>A LITTLE RABBIT'S COURAGE</small></div>
     <div class="src-badge" id="srcBadge">尚未播放</div>
   </div>
@@ -660,6 +668,10 @@ document.querySelector('.stage').addEventListener('touchend',e=>{
   const dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
   if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)) go(page+(dx<0?1:-1));
 },{passive:true});
+
+/* 若這本繪本被放在書架的 books/ 資料夾底下，就顯示「回書架」按鈕；
+   單獨一個檔案使用時自動隱藏，不會出現壞掉的連結 */
+if(/\/books\//.test(location.pathname)) $('back').hidden=false;
 
 /* 封面插圖 */
 $('coverArt').innerHTML=`
