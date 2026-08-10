@@ -65,7 +65,7 @@ body{
   box-shadow:inset 0 0 0 2px rgba(255,255,255,.6), 0 3px 10px rgba(120,90,60,.12);
   position:relative;
 }
-.stage svg{display:block;width:100%;height:auto}
+.stage .story-image{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
 .pagetag{
   position:absolute;left:10px;top:8px;
   background:rgba(255,255,255,.82);color:var(--ink-soft);
@@ -134,7 +134,10 @@ input[type=range]{width:78px;accent-color:var(--accent)}
 .cover.hide{opacity:0;visibility:hidden}
 .cover h1{font-size:32px;margin:0;letter-spacing:4px}
 .cover p{margin:0;color:var(--ink-soft);font-size:13px;line-height:1.9}
-.cover svg{width:190px;height:auto}
+.cover .cover-art{
+  display:block;width:min(100%,360px);height:auto;aspect-ratio:4/3;object-fit:cover;
+  border-radius:18px;box-shadow:0 8px 24px rgba(120,90,60,.18)
+}
 .cover button{
   background:linear-gradient(160deg,var(--accent),var(--accent-dark));color:#fff;
   padding:14px 34px;border-radius:99px;font-size:16px;height:auto;
@@ -154,7 +157,7 @@ input[type=range]{width:78px;accent-color:var(--accent)}
   .panel{grid-row:2/3;padding:0 4px;display:flex;flex-direction:column;justify-content:center}
   .controls{grid-row:3/4;border-top:none}
   .line{font-size:20px;line-height:2.05}
-  .cover svg{width:240px}
+  .cover .cover-art{width:420px}
   .cover h1{font-size:40px}
 }
 /* 窄機身（iPhone SE 375px）文字微調，讓一頁盡量不用捲動 */
@@ -181,7 +184,7 @@ input[type=range]{width:78px;accent-color:var(--accent)}
 
   <div class="stage">
     <div class="pagetag" id="pagetag">1 / 8</div>
-    <svg id="art" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet"></svg>
+    <img id="art" class="story-image" src="images/page-01.webp" alt="小豆依偎在兔媽媽身邊睡覺">
   </div>
 
   <div class="panel" id="panel"></div>
@@ -200,7 +203,7 @@ input[type=range]{width:78px;accent-color:var(--accent)}
   </div>
 
   <div class="cover" id="cover">
-    <svg viewBox="0 0 200 200" id="coverArt"></svg>
+    <img class="cover-art" src="images/cover.webp" alt="小豆鼓起勇氣走上森林小徑，兔媽媽在家門前溫柔地看著他">
     <h1>小豆的勇氣</h1>
     <p>一隻好黏媽媽的小兔子<br>如何學會自己往前走一步<br><span style="font-size:11px;opacity:.75">適讀 4-6 歲 ・ 全 8 頁 ・ 約 3 分鐘</span></p>
     <button id="btnStart">▶ 開始聽故事</button>
@@ -255,6 +258,18 @@ const BOOK = [
    {role:'旁白', text:'他把最大的那一根紅蘿蔔，遞給媽媽。', emo:'溫暖、放鬆', rate:.84, pitch:1.00, gap:560},
    {role:'小豆', text:'「媽媽，明天我還要自己去。」', emo:'驕傲又開心，句尾明亮上揚', rate:.92, pitch:1.20, gap:1000}
  ]}
+];
+
+const SCENE_IMAGES = BOOK.map((_,i)=>`images/page-${String(i+1).padStart(2,'0')}.webp`);
+const SCENE_ALTS = [
+  '小豆依偎在兔媽媽身邊睡覺',
+  '小豆躲在兔媽媽身後，看著其他小兔子去採紅蘿蔔',
+  '兔媽媽蹲下來鼓勵緊張的小豆自己去採紅蘿蔔',
+  '小豆提著空籃子，獨自走在寬廣的森林小徑上',
+  '迷路的小豆在月夜裡靠著大石頭難過地哭泣',
+  '小豆望著月光，想起兔媽媽溫柔而堅定的鼓勵',
+  '小豆在月光下找到一整片胖胖的紅蘿蔔',
+  '小豆回到家，把最大的紅蘿蔔送給兔媽媽'
 ];
 
 /* =========================================================
@@ -621,7 +636,9 @@ function updatePlayBtn(){
   b.classList.toggle('playing',playing);
 }
 function render(){
-  $('art').innerHTML=SCENES[BOOK[page].scene]();
+  $('art').src=SCENE_IMAGES[page];
+  $('art').alt=SCENE_ALTS[page];
+  if(SCENE_IMAGES[page+1]){ const preload=new Image(); preload.src=SCENE_IMAGES[page+1]; }
   $('pagetag').textContent=`${page+1} / ${BOOK.length}`;
   $('panel').innerHTML=BOOK[page].lines.map((l,i)=>{
     const cls=l.role==='媽媽'?'mom':l.role==='小豆'?'kid':'';
@@ -672,12 +689,6 @@ document.querySelector('.stage').addEventListener('touchend',e=>{
 /* 若這本繪本被放在書架的 books/ 資料夾底下，就顯示「回書架」按鈕；
    單獨一個檔案使用時自動隱藏，不會出現壞掉的連結 */
 if(/\/books\//.test(location.pathname)) $('back').hidden=false;
-
-/* 封面插圖 */
-$('coverArt').innerHTML=`
-  <circle cx="100" cy="105" r="78" fill="#FFEFD6"/>
-  <circle cx="150" cy="46" r="17" fill="#FFE28E"/>
-  ${rabbit({x:100,y:172,s:.92,expr:'happy',arms:'up'})}`;
 
 render();
 </script>
