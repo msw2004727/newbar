@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F0E4D2">
+<title>小小繪本書架</title>
+<meta name="description" content="會說故事的 HTML 幼兒互動繪本，每一本都能按下播放鍵聽人聲朗讀。">
+<style>
+:root{
+  --paper:#FFF9F0;
+  --bg:#F0E4D2;
+  --ink:#43372C;
+  --ink-soft:#8B7A66;
+  --accent:#E88B6B;
+  --accent-dark:#D4674A;
+  --gold:#F2C15C;
+  --leaf:#7CBB70;
+  --line:#EADCC8;
+  --card-shadow:0 4px 16px rgba(120,90,60,.13);
+  --card-shadow-hi:0 10px 26px rgba(120,90,60,.22);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei","Heiti TC",system-ui,-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+/* 背景的紙感圓點 */
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:radial-gradient(circle, #E2D2B8 1.4px, transparent 1.5px);
+  background-size:22px 22px;
+}
+.wrap{position:relative;z-index:1;max-width:430px;margin:0 auto;padding:0 14px 40px}
+
+/* ---------- 頁首 ---------- */
+.hero{padding:28px 4px 18px;text-align:center}
+.hero .mark{width:76px;height:76px;margin:0 auto 10px;display:block}
+.hero h1{font-size:27px;margin:0;letter-spacing:3px;font-weight:800}
+.hero .en{font-size:10px;letter-spacing:2.5px;color:var(--ink-soft);margin-top:5px;font-weight:600}
+.hero p{font-size:13px;line-height:1.9;color:var(--ink-soft);margin:12px 6px 0}
+.hero .count{
+  display:inline-block;margin-top:12px;font-size:11px;font-weight:700;
+  background:var(--paper);color:var(--ink-soft);
+  padding:5px 14px;border-radius:99px;box-shadow:var(--card-shadow);
+}
+
+/* ---------- 篩選標籤 ---------- */
+.filters{
+  display:flex;gap:7px;overflow-x:auto;padding:16px 4px 14px;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;
+}
+.filters::-webkit-scrollbar{display:none}
+.chip{
+  flex:0 0 auto;border:none;cursor:pointer;font-family:inherit;font-weight:700;
+  font-size:12.5px;padding:8px 15px;border-radius:99px;
+  background:var(--paper);color:var(--ink-soft);
+  box-shadow:0 2px 6px rgba(120,90,60,.1);
+  transition:background .2s,color .2s,transform .12s;
+}
+.chip:active{transform:scale(.94)}
+.chip.on{background:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(212,103,74,.35)}
+
+/* ---------- 繪本卡片 ---------- */
+.grid{display:flex;flex-direction:column;gap:18px}
+.card{
+  display:block;text-decoration:none;color:inherit;
+  background:var(--paper);border-radius:22px;overflow:hidden;
+  box-shadow:var(--card-shadow);
+  transition:transform .22s cubic-bezier(.2,.8,.3,1), box-shadow .22s;
+  animation:pop .45s backwards;
+}
+@keyframes pop{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.card:active{transform:scale(.985)}
+@media (hover:hover){.card:hover{transform:translateY(-5px);box-shadow:var(--card-shadow-hi)}}
+.cover{position:relative;background:#DCEAF2;line-height:0}
+.cover svg{width:100%;height:auto;display:block}
+.badge-age{
+  position:absolute;right:11px;top:11px;
+  background:rgba(255,249,240,.94);color:var(--ink);
+  font-size:11px;font-weight:800;letter-spacing:.5px;
+  padding:5px 11px;border-radius:99px;box-shadow:0 2px 8px rgba(0,0,0,.14);
+}
+.badge-audio{
+  position:absolute;left:11px;bottom:11px;
+  background:rgba(67,55,44,.72);color:#FFF6E6;
+  font-size:10.5px;font-weight:700;
+  padding:4px 10px;border-radius:99px;backdrop-filter:blur(4px);
+}
+.body{padding:15px 16px 17px}
+.body h2{font-size:19px;margin:0;letter-spacing:1.2px;font-weight:800}
+.body .en2{font-size:9.5px;letter-spacing:1.6px;color:var(--ink-soft);margin-top:4px;font-weight:600}
+.body p{font-size:13.5px;line-height:1.85;color:#6E5F4F;margin:9px 0 0}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.tag{
+  font-size:11px;font-weight:700;padding:4px 10px;border-radius:99px;
+  background:#F4E7D4;color:#9A8468;
+}
+.tag.t0{background:#FBE0D6;color:#C4704F}
+.tag.t1{background:#E1EFD9;color:#5C8A50}
+.tag.t2{background:#DEE9F5;color:#5A7A9E}
+.meta{
+  display:flex;align-items:center;gap:8px;margin-top:13px;
+  padding-top:11px;border-top:1px dashed var(--line);
+  font-size:11.5px;color:var(--ink-soft);font-weight:600;
+}
+.meta .go{margin-left:auto;color:var(--accent-dark);font-weight:800}
+
+/* 即將推出 */
+.card.soon{background:transparent;box-shadow:none;border:2px dashed #D8C6AC;cursor:default}
+.card.soon:hover{transform:none;box-shadow:none}
+.soon-in{padding:30px 20px;text-align:center;color:var(--ink-soft)}
+.soon-in .ico{font-size:30px;display:block;margin-bottom:8px}
+.soon-in b{display:block;font-size:14.5px;color:#8A7A66;margin-bottom:5px}
+.soon-in span{font-size:12px;line-height:1.8}
+
+.empty{text-align:center;color:var(--ink-soft);font-size:13px;padding:40px 10px}
+footer{text-align:center;color:var(--ink-soft);font-size:11px;line-height:2;margin-top:34px}
+
+/* ---------- 平板 / 桌機 ---------- */
+@media (min-width:720px){
+  .wrap{max-width:1080px;padding:0 26px 56px}
+  .hero{padding:44px 0 8px}
+  .hero .mark{width:96px;height:96px}
+  .hero h1{font-size:38px;letter-spacing:5px}
+  .hero p{font-size:14.5px}
+  .filters{justify-content:center;padding:22px 0 20px;flex-wrap:wrap;overflow:visible}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
+  .body h2{font-size:20px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <svg class="mark" id="mark" viewBox="0 0 120 120"></svg>
+    <h1>小小繪本書架</h1>
+    <div class="en">LITTLE PICTURE BOOK SHELF</div>
+    <p>會說故事的繪本。<br>按下播放鍵，就有人陪孩子一起唸。</p>
+    <div class="count" id="count"></div>
+  </header>
+
+  <nav class="filters" id="filters"></nav>
+  <main class="grid" id="grid"></main>
+
+  <footer>
+    每一本都可離線閱讀 ・ 手機 / 平板 / 電腦皆可<br>
+    插圖由程式繪製，無外部圖片依賴
+  </footer>
+</div>
+
+<script>
+/* =========================================================
+   ★ 要新增繪本，只要在 BOOKS 陣列加一筆就好 ★
+   cover 對應下方 COVERS 裡的封面函式；
+   還沒畫封面的話，先寫 cover:'generic' 也可以。
+   ========================================================= */
+const BOOKS = [
+  {
+    id:    'rabbit-courage',
+    title: '小豆的勇氣',
+    en:    "A LITTLE RABBIT'S COURAGE",
+    desc:  '一隻好黏媽媽的小兔子，在一次自己去採紅蘿蔔的旅程裡迷了路。哭過之後，他想起媽媽說的話 —— 勇敢，不是不害怕。',
+    tags:  ['勇氣','獨立','親子'],
+    age:   '4-6 歲',
+    pages: 8,
+    mins:  3,
+    href:  'books/rabbit-courage/index.html',
+    cover: 'rabbitCourage'
+  }
+  /* 下一本這樣加：
+  ,{
+    id:'seed-patience', title:'一顆很慢很慢的種子', en:'THE SLOW LITTLE SEED',
+    desc:'一顆種子怎麼也長不快，其他花都開了，只有它還埋在土裡……',
+    tags:['耐心','成長'], age:'4-6 歲', pages:8, mins:3,
+    href:'books/seed-patience/index.html', cover:'generic'
+  }
+  */
+];
+
+/* =========================================================
+   封面插圖（SVG，與繪本內頁同一套畫風與配色）
+   ========================================================= */
+const FUR='#FDF7EE', PINK='#F6C3C9', INK='#3F3329';
+
+function rabbit(o){
+  const s=o.s??1, x=o.x??0, y=o.y??0, f=o.fur??FUR, expr=o.expr??'calm';
+  const bodyCy=-38, bodyRy=30, bodyRx=25, hCy=-78, earTop=hCy-40, ey=hCy-3;
+  const ear=sx=>`<g transform="rotate(${sx*8} ${sx*11} ${hCy-14})">
+      <ellipse cx="${sx*11}" cy="${earTop}" rx="8.5" ry="27" fill="${f}" stroke="${INK}" stroke-width="1.6"/>
+      <ellipse cx="${sx*11}" cy="${earTop+1}" rx="4" ry="18" fill="${PINK}"/></g>`;
+  let face='';
+  if(expr==='brave'){
+    face=`<circle cx="-10" cy="${ey}" r="3.8" fill="${INK}"/><circle cx="10" cy="${ey}" r="3.8" fill="${INK}"/>
+      <circle cx="-8.8" cy="${ey-1.4}" r="1.2" fill="#fff"/><circle cx="11.2" cy="${ey-1.4}" r="1.2" fill="#fff"/>
+      <path d="M-16,${ey-9} q5,2.5 9,4" stroke="${INK}" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <path d="M16,${ey-9} q-5,2.5 -9,4" stroke="${INK}" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <path d="M-4.5,${hCy+12} L4.5,${hCy+12}" stroke="${INK}" stroke-width="1.9" stroke-linecap="round"/>`;
+  }else{
+    face=`<path d="M-14.5,${ey+1} q4.5,-6.5 9,0" stroke="${INK}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+      <path d="M5.5,${ey+1} q4.5,-6.5 9,0" stroke="${INK}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+      <path d="M-5,${hCy+10} q5,6 10,0" stroke="${INK}" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
+  }
+  const arms = o.arms==='up'
+    ? `<ellipse cx="-27" cy="${bodyCy-16}" rx="7" ry="15" fill="${f}" stroke="${INK}" stroke-width="1.5" transform="rotate(-42 -27 ${bodyCy-16})"/>
+       <ellipse cx="27" cy="${bodyCy-16}" rx="7" ry="15" fill="${f}" stroke="${INK}" stroke-width="1.5" transform="rotate(42 27 ${bodyCy-16})"/>`
+    : `<ellipse cx="-23" cy="${bodyCy-2}" rx="7" ry="14" fill="${f}" stroke="${INK}" stroke-width="1.5" transform="rotate(9 -23 ${bodyCy-2})"/>
+       <ellipse cx="23" cy="${bodyCy-2}" rx="7" ry="14" fill="${f}" stroke="${INK}" stroke-width="1.5" transform="rotate(-9 23 ${bodyCy-2})"/>`;
+  return `<g transform="translate(${x},${y}) scale(${s})">
+    <ellipse cx="0" cy="2" rx="34" ry="7" fill="rgba(20,10,40,.22)"/>
+    <circle cx="-28" cy="${bodyCy+6}" r="9.5" fill="${f}" stroke="${INK}" stroke-width="1.5"/>
+    ${ear(-1)}${ear(1)}
+    <ellipse cx="-13" cy="-7" rx="12" ry="8" fill="${f}" stroke="${INK}" stroke-width="1.5"/>
+    <ellipse cx="13" cy="-7" rx="12" ry="8" fill="${f}" stroke="${INK}" stroke-width="1.5"/>
+    <ellipse cx="0" cy="${bodyCy}" rx="${bodyRx}" ry="${bodyRy}" fill="${f}" stroke="${INK}" stroke-width="1.6"/>
+    ${arms}
+    <circle cx="0" cy="${hCy}" r="27" fill="${f}" stroke="${INK}" stroke-width="1.6"/>
+    <ellipse cx="-19" cy="${hCy+7}" rx="6" ry="4" fill="${PINK}" opacity=".75"/>
+    <ellipse cx="19" cy="${hCy+7}" rx="6" ry="4" fill="${PINK}" opacity=".75"/>
+    ${face}
+    <path d="M-3.6,${hCy+4} L3.6,${hCy+4} L0,${hCy+8.4} Z" fill="#E4939C"/>
+  </g>`;
+}
+const star=(x,y,r,o=1)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#FFF6D6" opacity="${o}"/>`;
+const pine=(x,y,s,c)=>`<path d="M${x},${y-70*s} L${x-30*s},${y} L${x+30*s},${y} Z" fill="${c}"/>`;
+const tree=(x,y,s,c1='#6FAE6B',c2='#4F8C51')=>`<g transform="translate(${x},${y}) scale(${s})">
+  <rect x="-7" y="-40" width="14" height="44" rx="6" fill="#9A6F46"/>
+  <circle cx="0" cy="-58" r="30" fill="${c1}"/><circle cx="-20" cy="-44" r="21" fill="${c2}"/>
+  <circle cx="21" cy="-46" r="22" fill="${c1}"/><circle cx="2" cy="-78" r="20" fill="${c2}"/></g>`;
+
+const COVERS = {
+  /* 小豆的勇氣：月夜，小兔子抬頭站著 */
+  rabbitCourage:()=>`
+    <defs><linearGradient id="c1sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#242F5E"/><stop offset="100%" stop-color="#41508A"/></linearGradient>
+      <radialGradient id="c1moon"><stop offset="0%" stop-color="#FFF8D8"/><stop offset="100%" stop-color="#FFE28E"/></radialGradient></defs>
+    <rect width="400" height="260" fill="url(#c1sky)"/>
+    <circle cx="306" cy="72" r="72" fill="#FFF3C4" opacity=".13"/>
+    <circle cx="306" cy="72" r="46" fill="url(#c1moon)"/>
+    <circle cx="290" cy="60" r="7" fill="#F3D482" opacity=".55"/>
+    <circle cx="320" cy="88" r="9" fill="#F3D482" opacity=".45"/>
+    ${star(46,44,2.4)}${star(104,26,1.7)}${star(150,62,2)}${star(58,104,1.5)}${star(210,34,1.8)}${star(372,140,1.6)}${star(28,158,1.4)}${star(176,104,1.3)}
+    ${pine(46,214,1.15,'#1B2547')}${pine(96,214,.85,'#212B52')}${pine(360,214,1.05,'#1B2547')}
+    <rect y="206" width="400" height="54" fill="#1D2750"/>
+    <path d="M0,206 q110,-14 220,4 t180,-8 v58 H0z" fill="#23305C"/>
+    <ellipse cx="196" cy="212" rx="76" ry="30" fill="#FFF0B8" opacity=".08"/>
+    ${rabbit({x:196,y:224,s:.72,expr:'brave'})}
+    <path d="M232,150 q34,-24 62,-46" stroke="#FFF3C4" stroke-width="1.8" stroke-dasharray="3 7" fill="none" opacity=".45"/>`,
+
+  /* 通用備用封面：白天的小山丘（新繪本還沒畫封面時先用） */
+  generic:()=>`
+    <defs><linearGradient id="cgsky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#CFE9F5"/><stop offset="100%" stop-color="#EAF6E8"/></linearGradient></defs>
+    <rect width="400" height="260" fill="url(#cgsky)"/>
+    <circle cx="330" cy="52" r="30" fill="#FFD05C"/><circle cx="330" cy="52" r="44" fill="#FFD05C" opacity=".22"/>
+    <g fill="#fff" opacity=".85">
+      <circle cx="74" cy="52" r="15"/><circle cx="96" cy="44" r="19"/><circle cx="118" cy="53" r="14"/>
+      <rect x="74" y="46" width="44" height="16" rx="8"/>
+    </g>
+    <rect y="186" width="400" height="74" fill="#8CC77E"/>
+    <path d="M0,186 q100,-20 200,-2 t200,-4 v82 H0z" fill="#7CBB70"/>
+    <ellipse cx="120" cy="214" rx="150" ry="46" fill="#8CC77E"/>
+    ${tree(330,206,.95)}${tree(58,200,.7,'#7CBB70','#5C9A5E')}
+    <circle cx="196" cy="196" r="15" fill="#EE8A3D"/>
+    <path d="M188,182 q8,-16 16,0z" fill="#5FA65C"/>`
+};
+
+/* =========================================================
+   渲染
+   ========================================================= */
+const $=id=>document.getElementById(id);
+let active='全部';
+
+$('mark').innerHTML=`
+  <circle cx="60" cy="62" r="52" fill="#FFF3DF"/>
+  <circle cx="92" cy="30" r="11" fill="#F2C15C"/>
+  ${rabbit({x:60,y:106,s:.55,expr:'happy',arms:'up'})}`;
+
+function card(b,i){
+  const cover=(COVERS[b.cover]||COVERS.generic)();
+  return `<a class="card" href="${b.href}" style="animation-delay:${i*70}ms">
+    <div class="cover">
+      <svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid meet">${cover}</svg>
+      <span class="badge-age">${b.age}</span>
+      <span class="badge-audio">🔊 語音朗讀</span>
+    </div>
+    <div class="body">
+      <h2>${b.title}</h2>
+      <div class="en2">${b.en}</div>
+      <p>${b.desc}</p>
+      <div class="tags">${b.tags.map((t,k)=>`<span class="tag t${k%3}">#${t}</span>`).join('')}</div>
+      <div class="meta"><span>📖 ${b.pages} 頁</span><span>・</span><span>⏱ 約 ${b.mins} 分鐘</span>
+        <span class="go">開始閱讀 ›</span></div>
+    </div>
+  </a>`;
+}
+
+const soonCard=`<div class="card soon"><div class="soon-in">
+  <span class="ico">🌱</span><b>更多繪本製作中</b>
+  <span>下一本正在畫封面、寫故事⋯⋯</span></div></div>`;
+
+function render(){
+  const list=active==='全部'?BOOKS:BOOKS.filter(b=>b.tags.includes(active));
+  $('grid').innerHTML = list.length
+    ? list.map(card).join('')+ (active==='全部'?soonCard:'')
+    : `<div class="empty">這個標籤下還沒有繪本 🐾</div>`;
+}
+
+function buildFilters(){
+  const tags=['全部',...new Set(BOOKS.flatMap(b=>b.tags))];
+  $('filters').innerHTML=tags.map(t=>`<button class="chip ${t===active?'on':''}" data-t="${t}">${t==='全部'?'全部':'#'+t}</button>`).join('');
+  $('filters').querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
+    active=c.dataset.t;
+    $('filters').querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x.dataset.t===active));
+    render();
+  });
+}
+
+$('count').textContent=`目前 ${BOOKS.length} 本繪本 ・ 持續增加中`;
+buildFilters();
+render();
+</script>
+</body>
+</html>
