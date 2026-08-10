@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>小豆的勇氣</title>
+<style>
+:root{
+  --paper:#FFF9F0;
+  --ink:#43372C;
+  --ink-soft:#8B7A66;
+  --accent:#E88B6B;
+  --accent-dark:#D4674A;
+  --gold:#F2C15C;
+  --line:#EADCC8;
+  --hl:#FFE9B8;
+  --shadow:0 8px 28px rgba(120,90,60,.16);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{
+  background:#F0E4D2;
+  color:var(--ink);
+  font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei","Heiti TC",system-ui,-apple-system,sans-serif;
+  overflow:hidden;
+  display:flex;justify-content:center;
+}
+
+/* ---------- 版面：手機直式優先（iPhone SE 375×667 為基準） ---------- */
+.book{
+  width:100%;max-width:430px;
+  height:100dvh;height:100vh;
+  display:flex;flex-direction:column;
+  background:var(--paper);
+  padding:calc(env(safe-area-inset-top) + 6px) 12px calc(env(safe-area-inset-bottom) + 8px);
+  box-shadow:var(--shadow);
+  position:relative;overflow:hidden;
+}
+
+/* 頁首 */
+.head{display:flex;align-items:center;gap:8px;flex:0 0 auto;padding:0 2px 6px}
+.title{font-size:15px;font-weight:800;letter-spacing:.5px}
+.title small{display:block;font-size:10px;font-weight:500;color:var(--ink-soft);letter-spacing:1px}
+.src-badge{
+  margin-left:auto;font-size:10px;padding:3px 8px;border-radius:99px;
+  background:#EFE3D0;color:var(--ink-soft);white-space:nowrap;
+}
+.src-badge.mp3{background:#D8EFD6;color:#3F7A46}
+.src-badge.tts{background:#FDE7CF;color:#B5713A}
+
+/* 插圖舞台 */
+.stage{
+  flex:0 0 auto;
+  width:100%;
+  border-radius:18px;overflow:hidden;
+  background:#DCEAF2;
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.6), 0 3px 10px rgba(120,90,60,.12);
+  position:relative;
+}
+.stage svg{display:block;width:100%;height:auto}
+.pagetag{
+  position:absolute;left:10px;top:8px;
+  background:rgba(255,255,255,.82);color:var(--ink-soft);
+  font-size:10px;font-weight:700;letter-spacing:1px;
+  padding:2px 9px;border-radius:99px;
+}
+
+/* 文字區 */
+.panel{
+  flex:1 1 auto;min-height:0;overflow-y:auto;
+  padding:12px 4px 4px;
+  -webkit-overflow-scrolling:touch;
+}
+.line{
+  font-size:18px;line-height:1.95;letter-spacing:.6px;
+  padding:5px 10px;margin:2px 0;border-radius:12px;
+  transition:background .25s, color .25s, transform .25s;
+  cursor:pointer;position:relative;
+}
+.line .role{
+  display:inline-block;font-size:10px;font-weight:700;
+  color:var(--ink-soft);background:#F1E5D3;
+  padding:1px 7px;border-radius:99px;margin-right:6px;
+  vertical-align:2px;
+}
+.line.mom .role{background:#F7DCE0;color:#B26E7C}
+.line.kid .role{background:#DCE9F7;color:#5F7FA3}
+.line.active{background:var(--hl);transform:translateX(3px)}
+.line.done{color:var(--ink-soft)}
+
+/* 控制列 */
+.controls{flex:0 0 auto;padding-top:6px;border-top:1px solid var(--line)}
+.row{display:flex;align-items:center;justify-content:center;gap:10px}
+.row.top{margin-bottom:8px}
+button{
+  font-family:inherit;border:none;cursor:pointer;color:var(--ink);
+  background:#F3E7D5;border-radius:99px;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .12s, background .2s;
+  font-weight:700;
+}
+button:active{transform:scale(.92)}
+button:disabled{opacity:.35;cursor:default}
+.nav{width:46px;height:46px;font-size:20px;flex:0 0 auto}
+.play{
+  width:66px;height:66px;font-size:26px;flex:0 0 auto;
+  background:linear-gradient(160deg,var(--accent),var(--accent-dark));
+  color:#fff;box-shadow:0 6px 16px rgba(212,103,74,.4);
+}
+.play.playing{background:linear-gradient(160deg,#F2C15C,#E0A233);box-shadow:0 6px 16px rgba(224,162,51,.4)}
+.mini{height:30px;padding:0 12px;font-size:11.5px;background:#F3E7D5;color:var(--ink-soft)}
+.mini.on{background:var(--gold);color:#5C4520}
+.dots{display:flex;gap:5px;justify-content:center;padding:8px 0 2px}
+.dot{width:6px;height:6px;border-radius:99px;background:var(--line);transition:all .25s}
+.dot.on{background:var(--accent);width:18px}
+.speed{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-soft)}
+input[type=range]{width:78px;accent-color:var(--accent)}
+
+/* 封面 / 結尾 */
+.cover{
+  position:absolute;inset:0;z-index:20;background:var(--paper);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;padding:24px;text-align:center;
+  transition:opacity .5s, visibility .5s;
+}
+.cover.hide{opacity:0;visibility:hidden}
+.cover h1{font-size:32px;margin:0;letter-spacing:4px}
+.cover p{margin:0;color:var(--ink-soft);font-size:13px;line-height:1.9}
+.cover svg{width:190px;height:auto}
+.cover button{
+  background:linear-gradient(160deg,var(--accent),var(--accent-dark));color:#fff;
+  padding:14px 34px;border-radius:99px;font-size:16px;height:auto;
+  box-shadow:0 6px 18px rgba(212,103,74,.35);
+}
+
+/* ---------- 寬螢幕：自動變左右分欄 ---------- */
+@media (min-width:900px) and (min-height:520px){
+  .book{
+    max-width:1040px;height:min(680px,100dvh);margin:auto;
+    border-radius:26px;padding:22px 26px;
+    display:grid;grid-template-columns:1.15fr 1fr;grid-template-rows:auto 1fr auto;
+    column-gap:26px;
+  }
+  .head{grid-column:1/3}
+  .stage{grid-row:2/4;align-self:center}
+  .panel{grid-row:2/3;padding:0 4px;display:flex;flex-direction:column;justify-content:center}
+  .controls{grid-row:3/4;border-top:none}
+  .line{font-size:20px;line-height:2.05}
+  .cover svg{width:240px}
+  .cover h1{font-size:40px}
+}
+/* 窄機身（iPhone SE 375px）文字微調，讓一頁盡量不用捲動 */
+@media (max-width:400px){
+  .line{font-size:17px;line-height:1.88;padding:4px 9px}
+  .panel{padding-top:9px}
+}
+/* 極矮螢幕（如 SE 橫向）自動縮圖 */
+@media (max-height:640px){
+  .line{font-size:16.5px;line-height:1.85}
+  .play{width:58px;height:58px;font-size:23px}
+  .nav{width:42px;height:42px}
+}
+</style>
+</head>
+<body>
+<div class="book">
+
+  <div class="head">
+    <div class="title">小豆的勇氣<small>A LITTLE RABBIT'S COURAGE</small></div>
+    <div class="src-badge" id="srcBadge">尚未播放</div>
+  </div>
+
+  <div class="stage">
+    <div class="pagetag" id="pagetag">1 / 8</div>
+    <svg id="art" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet"></svg>
+  </div>
+
+  <div class="panel" id="panel"></div>
+
+  <div class="controls">
+    <div class="dots" id="dots"></div>
+    <div class="row top">
+      <button class="mini" id="btnAuto">🔁 自動翻頁</button>
+      <div class="speed">🐢<input type="range" id="speed" min="0.6" max="1.3" step="0.05" value="0.95">🐇</div>
+    </div>
+    <div class="row">
+      <button class="nav" id="btnPrev" aria-label="上一頁">‹</button>
+      <button class="play" id="btnPlay" aria-label="播放">▶</button>
+      <button class="nav" id="btnNext" aria-label="下一頁">›</button>
+    </div>
+  </div>
+
+  <div class="cover" id="cover">
+    <svg viewBox="0 0 200 200" id="coverArt"></svg>
+    <h1>小豆的勇氣</h1>
+    <p>一隻好黏媽媽的小兔子<br>如何學會自己往前走一步<br><span style="font-size:11px;opacity:.75">適讀 4-6 歲 ・ 全 8 頁 ・ 約 3 分鐘</span></p>
+    <button id="btnStart">▶ 開始聽故事</button>
+  </div>
+
+</div>
+
+<script>
+/* =========================================================
+   1. 繪本內容
+   每一句都可獨立配音：音檔請放在 audio/p{頁}-{句}.mp3
+   例如第 3 頁第 2 句 → audio/p3-2.mp3
+   找不到音檔時，會自動改用瀏覽器內建語音（用 rate/pitch 模擬情緒）
+   ========================================================= */
+const BOOK = [
+ { scene:'homeNight', lines:[
+   {role:'旁白', text:'小豆是一隻小兔子。他走到哪裡，都牽著媽媽的手。', emo:'溫柔敘述，像在床邊說話', rate:.86, pitch:1.00, gap:520},
+   {role:'旁白', text:'連睡覺的時候，也要抓著媽媽軟軟的耳朵。', emo:'放慢，帶著笑意', rate:.82, pitch:1.03, gap:700}
+ ]},
+ { scene:'forestDay', lines:[
+   {role:'旁白', text:'森林裡的小兔子，都會自己去採紅蘿蔔。', emo:'明亮輕快', rate:.92, pitch:1.05, gap:460},
+   {role:'旁白', text:'只有小豆，躲在媽媽身後偷偷看。', emo:'聲音放輕、放小', rate:.84, pitch:.98, gap:520},
+   {role:'旁白', text:'他好想跟大家一起去，可是他的腳，動不了。', emo:'失落，句尾往下沉', rate:.80, pitch:.94, gap:760}
+ ]},
+ { scene:'doorMorning', lines:[
+   {role:'旁白', text:'有一天早上，媽媽蹲下來，輕輕地說：', emo:'平穩敘述，句尾留白', rate:.88, pitch:1.00, gap:420},
+   {role:'媽媽', text:'「小豆，今天你自己去採一根紅蘿蔔，好嗎？」', emo:'溫柔鼓勵，句尾上揚', rate:.84, pitch:1.02, gap:600},
+   {role:'旁白', text:'小豆的心，噗通、噗通，跳得好快。', emo:'緊張，語速加快、音調提高', rate:1.06, pitch:1.16, gap:760}
+ ]},
+ { scene:'forestPath', lines:[
+   {role:'旁白', text:'小豆走出家門。一步，兩步，三步。', emo:'忐忑，每個詞之間明顯停頓', rate:.78, pitch:1.04, gap:560},
+   {role:'旁白', text:'森林好大好大，風吹過樹葉，沙沙沙。', emo:'氣音、放輕，像耳語', rate:.82, pitch:.96, gap:520},
+   {role:'旁白', text:'他好想回頭，可是他沒有。', emo:'先猶豫、後堅定', rate:.86, pitch:.97, gap:800}
+ ]},
+ { scene:'nightRock', lines:[
+   {role:'旁白', text:'走著走著，小豆迷路了。', emo:'情緒沉下來', rate:.80, pitch:.93, gap:520},
+   {role:'旁白', text:'天色慢慢暗了，小豆蹲在大石頭旁邊，哭了。', emo:'難過，音量變小', rate:.76, pitch:.95, gap:640},
+   {role:'小豆', text:'「媽媽……我好想你。」', emo:'哽咽、顫抖，中間拉長停頓', rate:.70, pitch:1.18, gap:900}
+ ]},
+ { scene:'moon', lines:[
+   {role:'旁白', text:'哭著哭著，小豆想起媽媽說過的話。', emo:'轉折，語氣微微上揚', rate:.86, pitch:1.00, gap:560},
+   {role:'媽媽', text:'「勇敢，不是不害怕。」', emo:'溫柔而堅定，帶回音感', rate:.72, pitch:1.00, gap:700},
+   {role:'媽媽', text:'「是害怕的時候，還願意再往前走一步。」', emo:'溫柔而堅定，重音在「一步」', rate:.74, pitch:1.00, gap:900}
+ ]},
+ { scene:'carrotField', lines:[
+   {role:'旁白', text:'小豆深深吸了一口氣，站了起來。', emo:'堅定，句首吸氣聲', rate:.84, pitch:1.00, gap:480},
+   {role:'旁白', text:'他擦掉眼淚，順著月光，一步一步往前走。', emo:'漸強，越說越有力量', rate:.90, pitch:1.04, gap:520},
+   {role:'旁白', text:'然後他看見了——一整片胖胖的紅蘿蔔！', emo:'驚喜！破折號後停一拍再爆發', rate:1.08, pitch:1.22, gap:820}
+ ]},
+ { scene:'homeReturn', lines:[
+   {role:'旁白', text:'小豆回到家的時候，媽媽正站在門口等他。', emo:'溫暖、放鬆', rate:.84, pitch:1.00, gap:520},
+   {role:'旁白', text:'他把最大的那一根紅蘿蔔，遞給媽媽。', emo:'溫暖、放鬆', rate:.84, pitch:1.00, gap:560},
+   {role:'小豆', text:'「媽媽，明天我還要自己去。」', emo:'驕傲又開心，句尾明亮上揚', rate:.92, pitch:1.20, gap:1000}
+ ]}
+];
+
+/* =========================================================
+   2. SVG 角色繪製
+   ========================================================= */
+const FUR='#FDF7EE', FUR_M='#F3E7D6', PINK='#F6C3C9', INK='#3F3329';
+
+function rabbit(o){
+  const s=o.s??1, x=o.x??0, y=o.y??0, f=o.fur??FUR, expr=o.expr??'calm';
+  const sit=o.pose==='sit', flip=o.flip?-1:1;
+  const bodyCy=sit?-26:-38, bodyRy=sit?24:30, bodyRx=sit?27:25;
+  const hCy=sit?-62:-78, hR=27;
+  const earTop=hCy-40;
+  const eTilt=o.earDroop??0;
+  const fCy=sit?-6:-7;
+
+  // 耳朵
+  const ear=(sx)=>{
+    const rot=(sx<0?-8:8)+(sx<0?-eTilt:eTilt);
+    return `<g transform="rotate(${rot} ${sx*11} ${hCy-14})">
+      <ellipse cx="${sx*11}" cy="${earTop}" rx="8.5" ry="27" fill="${f}" stroke="${INK}" stroke-width="1.6"/>
+      <ellipse cx="${sx*11}" cy="${earTop+1}" rx="4" ry="18" fill="${PINK}"/></g>`;
+  };
+
+  // 眼睛 / 嘴巴
+  let face='';
+  const ey=hCy-3;
+  if(expr==='calm'||expr==='shy'){
+    face=`<circle cx="-10" cy="${ey}" r="3.6" fill="${INK}"/><circle cx="10" cy="${ey}" r="3.6" fill="${INK}"/>
+          <circle cx="-8.8" cy="${ey-1.4}" r="1.2" fill="#fff"/><circle cx="11.2" cy="${ey-1.4}" r="1.2" fill="#fff"/>
+          <path d="M-3.5,${hCy+11} q3.5,3.5 7,0" stroke="${INK}" stroke-width="1.7" fill="none" stroke-linecap="round"/>`;
+  }else if(expr==='happy'){
+    face=`<path d="M-14.5,${ey+1} q4.5,-6.5 9,0" stroke="${INK}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+          <path d="M5.5,${ey+1} q4.5,-6.5 9,0" stroke="${INK}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+          <path d="M-5,${hCy+10} q5,6 10,0" stroke="${INK}" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
+  }else if(expr==='sleepy'){
+    face=`<path d="M-14,${ey} q4,4 8,0" stroke="${INK}" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          <path d="M6,${ey} q4,4 8,0" stroke="${INK}" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+          <path d="M-3,${hCy+11} q3,2.5 6,0" stroke="${INK}" stroke-width="1.7" fill="none" stroke-linecap="round"/>`;
+  }else if(expr==='scared'){
+    face=`<ellipse cx="-10" cy="${ey}" rx="4.4" ry="5" fill="${INK}"/><ellipse cx="10" cy="${ey}" rx="4.4" ry="5" fill="${INK}"/>
+          <circle cx="-8.6" cy="${ey-2}" r="1.7" fill="#fff"/><circle cx="11.4" cy="${ey-2}" r="1.7" fill="#fff"/>
+          <path d="M-17,${ey-9} q5,-3.5 9,-1.5" stroke="${INK}" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+          <path d="M17,${ey-9} q-5,-3.5 -9,-1.5" stroke="${INK}" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+          <ellipse cx="0" cy="${hCy+11}" rx="2.6" ry="3.2" fill="${INK}"/>`;
+  }else if(expr==='sad'){
+    face=`<circle cx="-10" cy="${ey}" r="4" fill="${INK}"/><circle cx="10" cy="${ey}" r="4" fill="${INK}"/>
+          <circle cx="-8.8" cy="${ey-1.5}" r="1.3" fill="#fff"/><circle cx="11.2" cy="${ey-1.5}" r="1.3" fill="#fff"/>
+          <path d="M-16,${ey-8} q5,-2 9,1" stroke="${INK}" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+          <path d="M16,${ey-8} q-5,-2 -9,1" stroke="${INK}" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+          <path d="M-4,${hCy+13} q4,-4 8,0" stroke="${INK}" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <ellipse cx="-12.5" cy="${ey+8}" rx="2.4" ry="4.2" fill="#7FC4E8" opacity=".9"/>
+          <ellipse cx="12.5" cy="${ey+10}" rx="2.1" ry="3.6" fill="#7FC4E8" opacity=".9"/>`;
+  }else if(expr==='brave'){
+    face=`<circle cx="-10" cy="${ey}" r="3.8" fill="${INK}"/><circle cx="10" cy="${ey}" r="3.8" fill="${INK}"/>
+          <circle cx="-8.8" cy="${ey-1.4}" r="1.2" fill="#fff"/><circle cx="11.2" cy="${ey-1.4}" r="1.2" fill="#fff"/>
+          <path d="M-16,${ey-9} q5,2.5 9,4" stroke="${INK}" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <path d="M16,${ey-9} q-5,2.5 -9,4" stroke="${INK}" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <path d="M-4.5,${hCy+12} L4.5,${hCy+12}" stroke="${INK}" stroke-width="1.9" stroke-linecap="round"/>`;
+  }
+
+  // 手臂
+  let arms='';
+  if(o.arms==='up'){
+    arms=`<ellipse cx="-27" cy="${bodyCy-16}" rx="7" ry="15" fill="${f}" stroke="${INK}" stroke-width="1.5" transform="rotate(-42 -27 ${bodyCy-16})"/>
+          <ellipse cx="27" cy="${bodyCy-16}" rx="7" ry="15" fill="${f}" stroke="${INK}" stroke-width="1.5" transform="rotate(42 27 ${bodyCy-16})"/>`;
+  }else if(o.arms==='open'){
+    arms=`<ellipse cx="-32" cy="${bodyCy-4}" rx="7" ry="16" fill="${f}" stroke="${INK}" stroke-width="1.5" transform="rotate(-72 -32 ${bodyCy-4})"/>
+          <ellipse cx="32" cy="${bodyCy-4}" rx="7" ry="16" fill="${f}" stroke="${INK}" stroke-width="1.5" transform="rotate(72 32 ${bodyCy-4})"/>`;
+  }else if(o.arms==='reach'){
+    arms=`<ellipse cx="-24" cy="${bodyCy}" rx="7" ry="14" fill="${f}" stroke="${INK}" stroke-width="1.5" transform="rotate(10 -24 ${bodyCy})"/>
+          <ellipse cx="26" cy="${bodyCy-6}" rx="7" ry="15" fill="${f}" stroke="${INK}" stroke-width="1.5" transform="rotate(66 26 ${bodyCy-6})"/>`;
+  }else{
+    arms=`<ellipse cx="-23" cy="${bodyCy-2}" rx="7" ry="14" fill="${f}" stroke="${INK}" stroke-width="1.5" transform="rotate(9 -23 ${bodyCy-2})"/>
+          <ellipse cx="23" cy="${bodyCy-2}" rx="7" ry="14" fill="${f}" stroke="${INK}" stroke-width="1.5" transform="rotate(-9 23 ${bodyCy-2})"/>`;
+  }
+
+  const scarf=o.scarf?`<path d="M-19,${hCy+24} q19,10 38,0 l1,8 q-20,10 -40,0 z" fill="${o.scarf}" stroke="${INK}" stroke-width="1.4"/>`:'';
+
+  return `<g transform="translate(${x},${y}) scale(${flip*s},${s})">
+    <ellipse cx="0" cy="2" rx="34" ry="7" fill="rgba(60,40,20,.14)"/>
+    <circle cx="-28" cy="${bodyCy+6}" r="9.5" fill="${f}" stroke="${INK}" stroke-width="1.5"/>
+    ${ear(-1)}${ear(1)}
+    <ellipse cx="-13" cy="${fCy}" rx="12" ry="8" fill="${f}" stroke="${INK}" stroke-width="1.5"/>
+    <ellipse cx="13" cy="${fCy}" rx="12" ry="8" fill="${f}" stroke="${INK}" stroke-width="1.5"/>
+    <ellipse cx="0" cy="${bodyCy}" rx="${bodyRx}" ry="${bodyRy}" fill="${f}" stroke="${INK}" stroke-width="1.6"/>
+    ${arms}${scarf}
+    <circle cx="0" cy="${hCy}" r="${hR}" fill="${f}" stroke="${INK}" stroke-width="1.6"/>
+    <ellipse cx="-19" cy="${hCy+7}" rx="6" ry="4" fill="${PINK}" opacity=".75"/>
+    <ellipse cx="19" cy="${hCy+7}" rx="6" ry="4" fill="${PINK}" opacity=".75"/>
+    ${face}
+    <path d="M-3.6,${hCy+4} L3.6,${hCy+4} L0,${hCy+8.4} Z" fill="#E4939C"/>
+  </g>`;
+}
+
+/* ---- 場景零件 ---- */
+const tree=(x,y,s,c1='#6FAE6B',c2='#4F8C51')=>`<g transform="translate(${x},${y}) scale(${s})">
+  <rect x="-7" y="-40" width="14" height="44" rx="6" fill="#9A6F46"/>
+  <circle cx="0" cy="-58" r="30" fill="${c1}"/><circle cx="-20" cy="-44" r="21" fill="${c2}"/>
+  <circle cx="21" cy="-46" r="22" fill="${c1}"/><circle cx="2" cy="-78" r="20" fill="${c2}"/></g>`;
+const bush=(x,y,s,c='#6BAA66')=>`<g transform="translate(${x},${y}) scale(${s})"><circle cx="-14" cy="0" r="14" fill="${c}"/><circle cx="14" cy="2" r="12" fill="${c}"/><circle cx="0" cy="-9" r="16" fill="${c}"/></g>`;
+const carrot=(x,y,s,rot=0)=>`<g transform="translate(${x},${y}) scale(${s}) rotate(${rot})">
+  <path d="M0,0 L-8,-22 L8,-22 Z" fill="#EE8A3D" stroke="#C96B26" stroke-width="1.4"/>
+  <path d="M-7,-22 q-8,-12 -2,-16 q5,3 6,14z" fill="#5FA65C"/><path d="M0,-24 q-2,-15 4,-18 q3,6 -1,18z" fill="#75BC6F"/>
+  <path d="M7,-22 q9,-11 4,-16 q-6,4 -7,14z" fill="#5FA65C"/></g>`;
+const star=(x,y,r,o=1)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#FFF6D6" opacity="${o}"/>`;
+const house=(x,y,s,lit)=>`<g transform="translate(${x},${y}) scale(${s})">
+  <rect x="-46" y="-56" width="92" height="58" rx="6" fill="#F0DCC0" stroke="${INK}" stroke-width="1.8"/>
+  <path d="M-56,-54 L0,-92 L56,-54 Z" fill="#C97A5C" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"/>
+  <rect x="-13" y="-32" width="26" height="34" rx="4" fill="#A9683F" stroke="${INK}" stroke-width="1.6"/>
+  <circle cx="7" cy="-15" r="2.2" fill="${INK}"/>
+  <rect x="18" y="-46" width="22" height="20" rx="4" fill="${lit?'#FFD98A':'#BFD6E0'}" stroke="${INK}" stroke-width="1.6"/>
+  <rect x="-40" y="-46" width="22" height="20" rx="4" fill="${lit?'#FFD98A':'#BFD6E0'}" stroke="${INK}" stroke-width="1.6"/></g>`;
+const cloud=(x,y,s,o=.85)=>`<g transform="translate(${x},${y}) scale(${s})" opacity="${o}">
+  <circle cx="-18" cy="0" r="14" fill="#fff"/><circle cx="0" cy="-7" r="18" fill="#fff"/><circle cx="19" cy="1" r="13" fill="#fff"/>
+  <rect x="-18" y="-3" width="38" height="16" rx="8" fill="#fff"/></g>`;
+
+/* ---- 8 個場景 ---- */
+const SCENES={
+ homeNight:()=>`
+  <rect width="400" height="300" fill="#F7E1BE"/>
+  <g opacity=".32" fill="#E4C089">
+    <circle cx="40" cy="40" r="4"/><circle cx="112" cy="72" r="4"/><circle cx="184" cy="34" r="4"/>
+    <circle cx="252" cy="62" r="4"/><circle cx="66" cy="126" r="4"/><circle cx="150" cy="152" r="4"/>
+    <circle cx="26" cy="188" r="4"/><circle cx="214" cy="118" r="4"/><circle cx="378" cy="150" r="4"/>
+  </g>
+  <ellipse cx="250" cy="176" rx="150" ry="130" fill="#FFEBC4" opacity=".5"/>
+  <rect y="226" width="400" height="74" fill="#C68D5C"/>
+  <rect y="219" width="400" height="9" fill="#A9744A"/>
+  <circle cx="330" cy="80" r="45" fill="#2E3F63" stroke="${INK}" stroke-width="4"/>
+  <circle cx="346" cy="66" r="14" fill="#FFF0BC"/>
+  ${star(310,62,2)}${star(314,102,1.6)}${star(348,102,2.2)}
+  <g transform="translate(80,219)">
+    <rect x="-86" y="-64" width="17" height="66" rx="7" fill="#C89A66" stroke="${INK}" stroke-width="1.6"/>
+    <rect x="-80" y="-8" width="160" height="10" rx="5" fill="#B07C4E" stroke="${INK}" stroke-width="1.5"/>
+    <rect x="-80" y="-36" width="160" height="30" rx="9" fill="#EFD7B2" stroke="${INK}" stroke-width="1.6"/>
+    <path d="M-20,-36 q52,-13 100,0 v12 q-48,-13 -100,0z" fill="#9DC4DE" stroke="${INK}" stroke-width="1.4"/>
+    <ellipse cx="-50" cy="-40" rx="24" ry="11" fill="#FFF8EA" stroke="${INK}" stroke-width="1.4"/>
+  </g>
+  <ellipse cx="256" cy="268" rx="118" ry="24" fill="#E9B98C"/>
+  <ellipse cx="256" cy="268" rx="86" ry="16" fill="#DFA97A"/>
+  ${rabbit({x:216,y:266,s:.84,expr:'happy',scarf:'#E88B6B'})}
+  ${rabbit({x:290,y:268,s:.54,expr:'sleepy'})}`,
+
+ forestDay:()=>`
+  <rect width="400" height="300" fill="#CFE9F5"/>
+  <rect y="214" width="400" height="86" fill="#8CC77E"/>
+  <path d="M0,214 q100,-16 200,0 t200,0 v90 H0z" fill="#7CBB70"/>
+  ${cloud(70,52,1)}${cloud(300,40,.8,.7)}
+  ${tree(40,224,.9)}${tree(345,220,1)}${tree(190,214,.62,'#7CBB70','#5C9A5E')}
+  ${bush(120,236,.8)}${bush(272,240,.7)}
+  ${rabbit({x:70,y:212,s:.36,expr:'happy',arms:'up'})}
+  ${rabbit({x:112,y:218,s:.34,expr:'happy'})}
+  ${rabbit({x:152,y:210,s:.33,expr:'happy',arms:'up'})}
+  ${carrot(88,196,.55,-14)}${carrot(168,194,.55,12)}
+  ${rabbit({x:284,y:266,s:.52,expr:'scared',earDroop:16})}
+  ${rabbit({x:322,y:266,s:.84,expr:'calm',scarf:'#E88B6B'})}`,
+
+ doorMorning:()=>`
+  <rect width="400" height="300" fill="#FFE8C4"/>
+  <circle cx="330" cy="52" r="34" fill="#FFD05C"/><circle cx="330" cy="52" r="46" fill="#FFD05C" opacity=".28"/>
+  <rect y="216" width="400" height="84" fill="#93CB80"/>
+  <path d="M0,216 q120,-14 240,2 t160,-4 v88 H0z" fill="#84C173"/>
+  ${cloud(96,46,.75,.75)}
+  ${house(80,222,.86,false)}
+  ${bush(372,250,.7)}
+  ${rabbit({x:186,y:266,s:.98,expr:'happy',arms:'reach',scarf:'#E88B6B',pose:'sit'})}
+  ${rabbit({x:262,y:268,s:.56,expr:'calm'})}
+  <g transform="translate(322,268)">
+    <path d="M-24,-16 L24,-16 L18,4 L-18,4 Z" fill="#D9A45F" stroke="${INK}" stroke-width="1.6" stroke-linejoin="round"/>
+    <path d="M-24,-16 q24,-24 48,0" stroke="#C08C46" stroke-width="2.6" fill="none"/>
+    <path d="M-25,-16 L25,-16" stroke="${INK}" stroke-width="2.4" stroke-linecap="round"/>
+    ${carrot(-8,-16,.5,-12)}${carrot(9,-16,.5,10)}
+  </g>
+  <path d="M228,222 q6,-9 12,-1" stroke="#F6E3B8" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".8"/>`,
+
+ forestPath:()=>`
+  <rect width="400" height="300" fill="#D6E9EF"/>
+  <rect y="196" width="400" height="104" fill="#6FA96E"/>
+  <path d="M170,196 L130,300 H274 L232,196 Z" fill="#E0C79A"/>
+  <path d="M170,196 L130,300" stroke="#CBAE7E" stroke-width="3"/><path d="M232,196 L274,300" stroke="#CBAE7E" stroke-width="3"/>
+  ${tree(28,214,1.25,'#5E9C5F','#437A48')}${tree(372,206,1.35,'#5E9C5F','#437A48')}
+  ${tree(96,196,.72,'#6FAE6B','#4F8C51')}${tree(306,192,.68,'#6FAE6B','#4F8C51')}
+  ${bush(62,262,.9,'#5E9C5F')}${bush(340,268,.95,'#5E9C5F')}
+  <path d="M188,120 q6,-10 12,0" stroke="#A9C7CE" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <path d="M206,136 q7,-11 14,0" stroke="#A9C7CE" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  ${rabbit({x:200,y:264,s:.62,expr:'scared',earDroop:6})}`,
+
+ nightRock:()=>`
+  <rect width="400" height="300" fill="#25305C"/>
+  <rect y="222" width="400" height="78" fill="#1B2447"/>
+  <path d="M0,222 q100,-14 200,2 t200,-6 v82 H0z" fill="#202A52"/>
+  ${star(48,40,2.2)}${star(96,74,1.5)}${star(150,32,1.8)}${star(268,50,2)}${star(320,88,1.5)}${star(360,36,2.4)}${star(210,66,1.4)}
+  <path d="M20,222 L48,150 L76,222 Z" fill="#16204A"/><path d="M88,222 L120,138 L152,222 Z" fill="#131C42"/>
+  <path d="M300,222 L332,144 L364,222 Z" fill="#16204A"/>
+  <g transform="translate(126,266)">
+    <ellipse cx="-8" cy="6" rx="72" ry="10" fill="#141D42" opacity=".65"/>
+    <path d="M-64,4 L-72,-24 L-46,-58 L-8,-68 L28,-48 L36,-16 L26,4 Z" fill="#4E5A86" stroke="#2C3660" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M-46,-58 L-18,-32 L-64,4 L-72,-24 Z" fill="#5D6C9E" opacity=".9"/>
+    <path d="M-8,-68 L-18,-32 L36,-16 L28,-48 Z" fill="#3E4975" opacity=".9"/>
+    <path d="M-18,-32 L-64,4 L26,4 L36,-16 Z" fill="#454F7E" opacity=".85"/>
+  </g>
+  ${rabbit({x:242,y:268,s:.72,expr:'sad',earDroop:44,pose:'sit',fur:'#F0E9DE'})}
+  <ellipse cx="219" cy="254" rx="4" ry="6" fill="#7FC4E8" opacity=".8"/>
+  <ellipse cx="269" cy="246" rx="3" ry="4.6" fill="#7FC4E8" opacity=".6"/>`,
+
+ moon:()=>`
+  <rect width="400" height="300" fill="#2B3767"/>
+  <defs><radialGradient id="mg"><stop offset="0%" stop-color="#FFF6CE"/><stop offset="100%" stop-color="#FFE28E"/></radialGradient></defs>
+  <circle cx="286" cy="92" r="86" fill="#FFF3C4" opacity=".14"/>
+  <circle cx="286" cy="92" r="58" fill="url(#mg)"/>
+  <circle cx="266" cy="76" r="8" fill="#F3D482" opacity=".6"/><circle cx="302" cy="110" r="11" fill="#F3D482" opacity=".5"/>
+  <g opacity=".22">${rabbit({x:286,y:132,s:.42,expr:'happy',arms:'open',fur:'#C9A85A'})}</g>
+  ${star(52,54,2.4)}${star(110,32,1.8)}${star(64,120,1.6)}${star(160,72,2)}${star(30,180,1.5)}${star(200,40,1.4)}
+  ${cloud(120,148,.9,.16)}${cloud(320,196,.7,.14)}
+  <rect y="238" width="400" height="62" fill="#1E2851"/>
+  <path d="M0,238 q120,-12 240,4 t160,-8 v66 H0z" fill="#232E5B"/>
+  ${rabbit({x:130,y:274,s:.58,expr:'calm',arms:'down',fur:'#EDE6DB'})}
+  <path d="M150,196 q40,-28 78,-56" stroke="#FFF3C4" stroke-width="2" stroke-dasharray="4 7" fill="none" opacity=".5"/>`,
+
+ carrotField:()=>`
+  <rect width="400" height="300" fill="#31407A"/>
+  <circle cx="66" cy="52" r="30" fill="#FFF0B8"/><circle cx="66" cy="52" r="46" fill="#FFF0B8" opacity=".16"/>
+  ${star(150,40,2)}${star(220,66,1.6)}${star(300,34,2.2)}${star(356,80,1.6)}${star(258,110,1.3)}
+  <rect y="204" width="400" height="96" fill="#6B5334"/>
+  <path d="M0,204 q100,-14 200,0 t200,-4 v104 H0z" fill="#7A5F3C"/>
+  <path d="M0,204 q100,-14 200,0 t200,-4" stroke="#8D6F47" stroke-width="4" fill="none"/>
+  ${carrot(212,236,.8,-8)}${carrot(258,246,.9,6)}${carrot(306,234,.75,-12)}${carrot(348,250,.95,10)}
+  ${carrot(238,272,.7,4)}${carrot(300,278,.8,-6)}${carrot(368,278,.7,8)}
+  ${rabbit({x:112,y:274,s:.7,expr:'happy',arms:'up',fur:'#FFFBF2'})}
+  <ellipse cx="112" cy="198" rx="66" ry="54" fill="#FFF0B8" opacity=".1"/>
+  <path d="M162,222 l10,-10 M170,238 l13,-4 M158,206 l6,-14" stroke="#FFF0B8" stroke-width="2.6" stroke-linecap="round" opacity=".7"/>`,
+
+ homeReturn:()=>`
+  <defs><linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#42538C"/><stop offset="60%" stop-color="#9A7BA0"/><stop offset="100%" stop-color="#F0A97E"/></linearGradient></defs>
+  <rect width="400" height="300" fill="url(#dusk)"/>
+  ${star(58,36,2)}${star(120,62,1.5)}${star(196,30,1.8)}
+  <circle cx="330" cy="46" r="20" fill="#FFF3C9"/>
+  <rect y="222" width="400" height="78" fill="#5D7A54"/>
+  <path d="M0,222 q120,-14 240,2 t160,-6 v84 H0z" fill="#547049"/>
+  ${house(316,226,.9,true)}
+  ${bush(56,254,.85,'#46603F')}
+  <ellipse cx="300" cy="250" rx="90" ry="46" fill="#FFD98A" opacity=".22"/>
+  ${rabbit({x:264,y:266,s:.84,expr:'happy',arms:'open',scarf:'#E88B6B'})}
+  ${rabbit({x:150,y:268,s:.56,expr:'happy',arms:'up',fur:'#FFFBF2'})}
+  ${carrot(178,236,.95,26)}
+  <path d="M118,234 l-12,-6 M112,250 l-14,0" stroke="#FFF3C9" stroke-width="2.4" stroke-linecap="round" opacity=".6"/>`
+};
+
+/* =========================================================
+   3. 播放引擎：MP3 優先，找不到就用瀏覽器語音
+   ========================================================= */
+const $=id=>document.getElementById(id);
+let page=0, playing=false, token=0, autoPage=false, globalRate=.95;
+let curAudio=null;
+const audioCache=new Map();
+
+function probeAudio(src){
+  if(audioCache.has(src)) return audioCache.get(src);
+  const p=new Promise(res=>{
+    const a=new Audio(); let done=false;
+    const ok=()=>{if(!done){done=true;res(a);}};
+    const bad=()=>{if(!done){done=true;res(null);}};
+    a.addEventListener('canplaythrough',ok,{once:true});
+    a.addEventListener('loadedmetadata',ok,{once:true});
+    a.addEventListener('error',bad,{once:true});
+    a.preload='auto'; a.src=src; a.load();
+    setTimeout(bad,1800);
+  });
+  audioCache.set(src,p); return p;
+}
+
+let voice=null;
+function pickVoice(){
+  const vs=speechSynthesis.getVoices();
+  if(!vs.length) return null;
+  return vs.find(v=>/zh[-_]TW/i.test(v.lang)&&/Google|Meijia|美嘉/i.test(v.name))
+      || vs.find(v=>/zh[-_]TW/i.test(v.lang))
+      || vs.find(v=>/zh[-_]HK/i.test(v.lang))
+      || vs.find(v=>/^zh/i.test(v.lang)) || null;
+}
+if('speechSynthesis' in window){
+  speechSynthesis.onvoiceschanged=()=>{voice=pickVoice();};
+  voice=pickVoice();
+}
+
+function speak(line){
+  return new Promise(res=>{
+    const est=line.text.length*300+1500;              // 保險：語音引擎沒回報結束時的最長等待
+    if(!('speechSynthesis' in window)) return setTimeout(res,Math.min(est,4000));
+    let done=false; const fin=()=>{if(!done){done=true;res();}};
+    const u=new SpeechSynthesisUtterance(line.text.replace(/[「」『』—…]/g,'，').replace(/，+/g,'，'));
+    u.lang='zh-TW';
+    if(voice) u.voice=voice;
+    u.rate=Math.max(.5,Math.min(2,line.rate*globalRate/0.95));
+    u.pitch=line.pitch;
+    u.onend=fin; u.onerror=fin;
+    speechSynthesis.speak(u);
+    setTimeout(fin,est/Math.max(.6,globalRate));
+  });
+}
+
+function playAudioEl(a){
+  return new Promise(res=>{
+    curAudio=a; a.currentTime=0;
+    a.playbackRate=Math.max(.5,Math.min(2,globalRate/0.95));
+    a.onended=res; a.onerror=res;
+    a.play().catch(res);
+  });
+}
+
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+function setBadge(kind){
+  const b=$('srcBadge');
+  b.className='src-badge '+(kind==='mp3'?'mp3':kind==='tts'?'tts':'');
+  b.textContent = kind==='mp3'?'🎧 配音檔':kind==='tts'?'🤖 瀏覽器語音':'尚未播放';
+}
+
+async function playPage(from=0){
+  const my=++token; playing=true; updatePlayBtn();
+  const lines=BOOK[page].lines;
+  for(let i=from;i<lines.length;i++){
+    if(my!==token) return;
+    highlight(i);
+    const src=`audio/p${page+1}-${i+1}.mp3`;
+    const a=await probeAudio(src);
+    if(my!==token) return;
+    setBadge(a?'mp3':'tts');
+    if(a) await playAudioEl(a); else await speak(lines[i]);
+    if(my!==token) return;
+    await sleep(lines[i].gap*(1/Math.max(.6,globalRate)));
+    if(my!==token) return;
+    markDone(i);
+  }
+  highlight(-1);
+  playing=false; updatePlayBtn();
+  if(autoPage && page<BOOK.length-1){ await sleep(600); if(my===token){ go(page+1); playPage(); } }
+}
+
+function stopAll(){
+  token++; playing=false;
+  if('speechSynthesis' in window) speechSynthesis.cancel();
+  if(curAudio){ curAudio.pause(); curAudio=null; }
+  highlight(-1); updatePlayBtn();
+}
+
+/* =========================================================
+   4. 畫面渲染
+   ========================================================= */
+function highlight(i){
+  document.querySelectorAll('.line').forEach((el,k)=>el.classList.toggle('active',k===i));
+  const el=document.querySelectorAll('.line')[i];
+  if(el) el.scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+function markDone(i){
+  const el=document.querySelectorAll('.line')[i];
+  if(el){ el.classList.remove('active'); el.classList.add('done'); }
+}
+function updatePlayBtn(){
+  const b=$('btnPlay');
+  b.textContent=playing?'⏸':'▶';
+  b.classList.toggle('playing',playing);
+}
+function render(){
+  $('art').innerHTML=SCENES[BOOK[page].scene]();
+  $('pagetag').textContent=`${page+1} / ${BOOK.length}`;
+  $('panel').innerHTML=BOOK[page].lines.map((l,i)=>{
+    const cls=l.role==='媽媽'?'mom':l.role==='小豆'?'kid':'';
+    const tag=l.role==='旁白'?'':`<span class="role">${l.role}</span>`;
+    return `<div class="line ${cls}" data-i="${i}" title="${l.emo}">${tag}${l.text}</div>`;
+  }).join('');
+  $('panel').querySelectorAll('.line').forEach(el=>{
+    el.onclick=()=>{ stopAll(); playPage(+el.dataset.i); };
+  });
+  $('dots').innerHTML=BOOK.map((_,i)=>`<div class="dot ${i===page?'on':''}"></div>`).join('');
+  $('btnPrev').disabled=page===0;
+  $('btnNext').disabled=page===BOOK.length-1;
+  $('panel').scrollTop=0;
+}
+function go(p){
+  if(p<0||p>=BOOK.length) return;
+  stopAll(); page=p; render();
+}
+
+/* ---- 事件 ---- */
+$('btnPlay').onclick=()=>{ if(playing) stopAll(); else playPage(); };
+$('btnPrev').onclick=()=>go(page-1);
+$('btnNext').onclick=()=>go(page+1);
+$('btnAuto').onclick=e=>{ autoPage=!autoPage; e.currentTarget.classList.toggle('on',autoPage); };
+$('speed').oninput=e=>{ globalRate=+e.target.value; };
+$('btnStart').onclick=()=>{
+  $('cover').classList.add('hide');
+  /* iOS Safari 必須在使用者點擊當下先「暖機」語音引擎，之後才能連續朗讀 */
+  if('speechSynthesis' in window){
+    speechSynthesis.cancel(); voice=pickVoice();
+    const warm=new SpeechSynthesisUtterance(' '); warm.volume=0; speechSynthesis.speak(warm);
+  }
+  setTimeout(()=>playPage(),420);
+};
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight') go(page+1);
+  if(e.key==='ArrowLeft') go(page-1);
+  if(e.key===' '){ e.preventDefault(); playing?stopAll():playPage(); }
+});
+/* 手機左右滑動翻頁 */
+let tx=0,ty=0;
+document.querySelector('.stage').addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+document.querySelector('.stage').addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
+  if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)) go(page+(dx<0?1:-1));
+},{passive:true});
+
+/* 封面插圖 */
+$('coverArt').innerHTML=`
+  <circle cx="100" cy="105" r="78" fill="#FFEFD6"/>
+  <circle cx="150" cy="46" r="17" fill="#FFE28E"/>
+  ${rabbit({x:100,y:172,s:.92,expr:'happy',arms:'up'})}`;
+
+render();
+</script>
+</body>
+</html>
