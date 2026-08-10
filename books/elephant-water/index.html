@@ -30,7 +30,7 @@ body{background:#F0E4D2;color:var(--ink);
 .src-badge.tts{background:#FBE3C8;color:#B5713A}
 .stage{flex:0 0 auto;width:100%;border-radius:18px;overflow:hidden;background:#DCEAF2;
   box-shadow:inset 0 0 0 2px rgba(255,255,255,.6),0 3px 10px rgba(120,90,60,.12);position:relative}
-.stage svg{display:block;width:100%;height:auto}
+.stage .story-image{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
 .pagetag{position:absolute;left:10px;top:8px;background:rgba(255,255,255,.85);color:var(--ink-soft);
   font-size:10px;font-weight:700;letter-spacing:1px;padding:2px 9px;border-radius:99px}
 .panel{flex:1 1 auto;min-height:0;overflow-y:auto;padding:12px 4px 4px;-webkit-overflow-scrolling:touch}
@@ -67,7 +67,8 @@ input[type=range]{width:74px;accent-color:var(--accent)}
 .cover h1{font-size:30px;margin:0;letter-spacing:3px}
 .cover p{margin:0;color:var(--ink-soft);font-size:13px;line-height:1.9}
 .cover .art{width:100%;max-width:280px}
-.cover .art svg{width:100%;height:auto;border-radius:16px;display:block}
+.cover .art{aspect-ratio:4/3;background:url('images/cover.webp') center/cover no-repeat;border-radius:16px}
+.cover .art svg{display:none}
 .cover button{background:linear-gradient(160deg,var(--accent),var(--accent-dark));color:#fff;padding:14px 34px;
   border-radius:99px;font-size:16px;height:auto;box-shadow:0 6px 18px rgba(214,112,94,.35)}
 @media (min-width:900px) and (min-height:520px){
@@ -209,7 +210,12 @@ function highlight(i){
 function markDone(i){ const el=document.querySelectorAll('.line')[i]; if(el){el.classList.remove('active');el.classList.add('done');} }
 function updatePlayBtn(){ const b=$('btnPlay'); b.textContent=playing?'⏸':'▶'; b.classList.toggle('playing',playing); }
 function render(){
-  $('art').innerHTML=SCENES[page];
+  const scene=document.createElement('img');
+  scene.className='story-image';
+  scene.src=`images/page-${String(page+1).padStart(2,'0')}.webp`;
+  scene.alt=`《小象的一鼻子水》第 ${page+1} 頁插畫：${LINES[page].map(line=>line.text).join('')}`;
+  scene.decoding='async';
+  $('art').replaceChildren(scene);
   $('pagetag').textContent=`${page+1} / ${LINES.length}`;
   $('panel').innerHTML=LINES[page].map((l,i)=>{
     const tag=l.role==='旁白'?'':`<span class="role">${l.role}</span>`;
