@@ -4,66 +4,59 @@
 
 ## 線上閱讀
 
-啟用 GitHub Pages 後：`https://<你的帳號>.github.io/<repo 名稱>/`
+<https://msw2004727.github.io/newbar/>
+
+## 現有繪本
+
+| 繪本 | 主題 | 年齡 | 頁數 |
+|---|---|---|---|
+| [小豆的勇氣](books/rabbit-courage/) | 勇氣 ・ 獨立 ・ 親子 | 4-6 歲 | 8 |
+| [熊媽媽的圍巾](books/bear-scarf/) | 親情 ・ 家庭 ・ 溫暖 | 3-5 歲 | 12 |
+| [飛不起來的咕咕](books/owl-flight/) | 學習 ・ 堅持 ・ 成長 | 4-6 歲 | 12 |
+| [打破的那個杯子](books/fox-sorry/) | 認錯 ・ 誠實 ・ 勇氣 | 5-7 歲 | 12 |
+| [我自己來](books/hedgehog-myself/) | 獨立 ・ 自信 ・ 生活 | 3-5 歲 | 12 |
+| [小象的一鼻子水](books/elephant-water/) | 善良 ・ 分享 ・ 同理 | 5-7 歲 | 12 |
+
+全部插圖都是程式繪製的 SVG，蠟筆筆觸與配色，無外部圖片依賴。
 
 ## 目錄結構
 
 ```
 .
-├── index.html                        書架入口（列出所有繪本）
-├── .nojekyll                         讓 GitHub Pages 原樣輸出靜態檔
-├── README.md
+├── index.html                    書架入口
+├── 一鍵生成全部配音.bat            ★ 一次生成所有繪本的配音
+├── 生成全部配音.py
+├── .nojekyll
 └── books/
-    └── rabbit-courage/               ← 一本繪本 = 一個資料夾
-        ├── index.html                繪本本體
-        ├── audio/                    這本的配音（p1-1.mp3 ~ p8-3.mp3）
+    └── <繪本代號>/
+        ├── index.html            繪本本體
+        ├── audio/                這本的配音 MP3
         └── tools/
             ├── 生成配音.py
-            ├── 一鍵生成配音.bat
+            ├── 一鍵生成配音.bat     只生成這一本
             └── 配音腳本.md
 ```
 
-規則只有一條：**每本繪本的 `index.html` 和它的 `audio/` 必須在同一層**（程式用相對路徑 `audio/pX-Y.mp3` 找音檔）。
-
-## 怎麼新增下一本繪本
-
-1. 在 `books/` 底下建一個新資料夾，例如 `books/seed-patience/`
-2. 把新繪本的 `index.html`、`audio/`、`tools/` 放進去
-3. 打開根目錄的 `index.html`，在 `BOOKS` 陣列加一筆：
-
-```js
-{
-  id:'seed-patience',
-  title:'一顆很慢很慢的種子',
-  en:'THE SLOW LITTLE SEED',
-  desc:'一顆種子怎麼也長不快，其他花都開了，只有它還埋在土裡……',
-  tags:['耐心','成長'],
-  age:'4-6 歲',
-  pages:8, mins:3,
-  href:'books/seed-patience/index.html',
-  cover:'generic'          // 還沒畫封面就先用 generic
-}
-```
-
-篩選標籤會自動從 `tags` 產生，不用另外設定。
-
-想畫專屬封面就在 `COVERS` 裡加一個函式（回傳 400×260 的 SVG 內容），再把 `cover` 改成那個名字。
-
-## 現有繪本
-
-| 繪本 | 年齡 | 頁數 | 主題 |
-|---|---|---|---|
-| 小豆的勇氣 | 4-6 歲 | 8 | 勇氣 ・ 獨立 ・ 親子 |
+規則只有一條：每本繪本的 `index.html` 和它的 `audio/` 必須同一層。
 
 ## 產生配音
 
-進到該繪本的 `tools/` 資料夾，Windows 雙擊 `一鍵生成配音.bat`；其他系統：
+**全部一起做**：雙擊根目錄的 `一鍵生成全部配音.bat`
+**只做一本**：進到該繪本的 `tools/`，雙擊 `一鍵生成配音.bat`
+
+使用微軟 Edge 神經語音（免註冊、免 API 金鑰、免費），角色音色與每一句的語速、音高、音量都已依情緒調好，參數寫在各繪本的 `tools/生成配音.py`。
+
+其他系統：
 
 ```bash
 pip install edge-tts
-python books/rabbit-courage/tools/生成配音.py
+python 生成全部配音.py
 ```
 
-使用微軟 Edge 神經語音（免註冊、免 API 金鑰、免費），音檔會自動生成到該繪本的 `audio/`。
-
 沒有音檔也能正常閱讀 —— 繪本會自動改用瀏覽器內建語音朗讀。
+
+## 怎麼新增下一本
+
+1. 在 `books/` 底下建新資料夾
+2. 放進 `index.html`、`audio/`、`tools/`
+3. 打開根目錄 `index.html`，在 `BOOKS` 陣列加一筆（標籤會自動變成篩選按鈕）

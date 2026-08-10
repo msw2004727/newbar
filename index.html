@@ -5,126 +5,64 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#F0E4D2">
 <title>小小繪本書架</title>
-<meta name="description" content="會說故事的 HTML 幼兒互動繪本，每一本都能按下播放鍵聽人聲朗讀。">
+<meta name="description" content="會說故事的 HTML 幼兒互動繪本，每一本都能按下播放鍵聽朗讀。">
 <style>
-:root{
-  --paper:#FFF9F0;
-  --bg:#F0E4D2;
-  --ink:#43372C;
-  --ink-soft:#8B7A66;
-  --accent:#E88B6B;
-  --accent-dark:#D4674A;
-  --gold:#F2C15C;
-  --leaf:#7CBB70;
-  --line:#EADCC8;
-  --card-shadow:0 4px 16px rgba(120,90,60,.13);
-  --card-shadow-hi:0 10px 26px rgba(120,90,60,.22);
-}
+:root{--paper:#FBF4E6;--bg:#F0E4D2;--ink:#5E4B3C;--ink-soft:#8A7259;--accent:#E8907F;--accent-dark:#D6705E;
+  --gold:#F7D678;--line:#EADCC4;--card-shadow:0 4px 16px rgba(120,90,60,.13);--card-shadow-hi:0 10px 26px rgba(120,90,60,.22)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{
-  margin:0;background:var(--bg);color:var(--ink);
-  font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei","Heiti TC",system-ui,-apple-system,sans-serif;
-  -webkit-font-smoothing:antialiased;
-}
-/* 背景的紙感圓點 */
-body::before{
-  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
-  background-image:radial-gradient(circle, #E2D2B8 1.4px, transparent 1.5px);
-  background-size:22px 22px;
-}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei","Heiti TC",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:radial-gradient(circle,#E2D2B8 1.4px,transparent 1.5px);background-size:22px 22px}
 .wrap{position:relative;z-index:1;max-width:430px;margin:0 auto;padding:0 14px 40px}
-
-/* ---------- 頁首 ---------- */
-.hero{padding:28px 4px 18px;text-align:center}
-.hero .mark{width:76px;height:76px;margin:0 auto 10px;display:block}
+.hero{padding:28px 4px 16px;text-align:center}
+.hero .mark{width:80px;height:80px;margin:0 auto 10px;display:block}
 .hero h1{font-size:27px;margin:0;letter-spacing:3px;font-weight:800}
 .hero .en{font-size:10px;letter-spacing:2.5px;color:var(--ink-soft);margin-top:5px;font-weight:600}
 .hero p{font-size:13px;line-height:1.9;color:var(--ink-soft);margin:12px 6px 0}
-.hero .count{
-  display:inline-block;margin-top:12px;font-size:11px;font-weight:700;
-  background:var(--paper);color:var(--ink-soft);
-  padding:5px 14px;border-radius:99px;box-shadow:var(--card-shadow);
-}
-
-/* ---------- 篩選標籤 ---------- */
-.filters{
-  display:flex;gap:7px;overflow-x:auto;padding:16px 4px 14px;
-  scrollbar-width:none;-webkit-overflow-scrolling:touch;
-}
+.hero .count{display:inline-block;margin-top:12px;font-size:11px;font-weight:700;background:var(--paper);
+  color:var(--ink-soft);padding:5px 14px;border-radius:99px;box-shadow:var(--card-shadow)}
+.filters{display:flex;gap:7px;overflow-x:auto;padding:16px 4px 14px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .filters::-webkit-scrollbar{display:none}
-.chip{
-  flex:0 0 auto;border:none;cursor:pointer;font-family:inherit;font-weight:700;
-  font-size:12.5px;padding:8px 15px;border-radius:99px;
-  background:var(--paper);color:var(--ink-soft);
-  box-shadow:0 2px 6px rgba(120,90,60,.1);
-  transition:background .2s,color .2s,transform .12s;
-}
+.chip{flex:0 0 auto;border:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:12.5px;
+  padding:8px 15px;border-radius:99px;background:var(--paper);color:var(--ink-soft);
+  box-shadow:0 2px 6px rgba(120,90,60,.1);transition:background .2s,color .2s,transform .12s}
 .chip:active{transform:scale(.94)}
-.chip.on{background:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(212,103,74,.35)}
-
-/* ---------- 繪本卡片 ---------- */
+.chip.on{background:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(214,112,94,.35)}
 .grid{display:flex;flex-direction:column;gap:18px}
-.card{
-  display:block;text-decoration:none;color:inherit;
-  background:var(--paper);border-radius:22px;overflow:hidden;
-  box-shadow:var(--card-shadow);
-  transition:transform .22s cubic-bezier(.2,.8,.3,1), box-shadow .22s;
-  animation:pop .45s backwards;
-}
+.card{display:block;text-decoration:none;color:inherit;background:var(--paper);border-radius:22px;overflow:hidden;
+  box-shadow:var(--card-shadow);transition:transform .22s cubic-bezier(.2,.8,.3,1),box-shadow .22s;animation:pop .45s backwards}
 @keyframes pop{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 .card:active{transform:scale(.985)}
 @media (hover:hover){.card:hover{transform:translateY(-5px);box-shadow:var(--card-shadow-hi)}}
 .cover{position:relative;background:#DCEAF2;line-height:0}
 .cover svg{width:100%;height:auto;display:block}
-.badge-age{
-  position:absolute;right:11px;top:11px;
-  background:rgba(255,249,240,.94);color:var(--ink);
-  font-size:11px;font-weight:800;letter-spacing:.5px;
-  padding:5px 11px;border-radius:99px;box-shadow:0 2px 8px rgba(0,0,0,.14);
-}
-.badge-audio{
-  position:absolute;left:11px;bottom:11px;
-  background:rgba(67,55,44,.72);color:#FFF6E6;
-  font-size:10.5px;font-weight:700;
-  padding:4px 10px;border-radius:99px;backdrop-filter:blur(4px);
-}
+.badge-age{position:absolute;right:11px;top:11px;background:rgba(251,244,230,.94);color:var(--ink);
+  font-size:11px;font-weight:800;letter-spacing:.5px;padding:5px 11px;border-radius:99px;box-shadow:0 2px 8px rgba(0,0,0,.14)}
+.badge-audio{position:absolute;left:11px;bottom:11px;background:rgba(94,75,60,.72);color:#FBF4E6;
+  font-size:10.5px;font-weight:700;padding:4px 10px;border-radius:99px;backdrop-filter:blur(4px)}
 .body{padding:15px 16px 17px}
 .body h2{font-size:19px;margin:0;letter-spacing:1.2px;font-weight:800}
 .body .en2{font-size:9.5px;letter-spacing:1.6px;color:var(--ink-soft);margin-top:4px;font-weight:600}
 .body p{font-size:13.5px;line-height:1.85;color:#6E5F4F;margin:9px 0 0}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.tag{
-  font-size:11px;font-weight:700;padding:4px 10px;border-radius:99px;
-  background:#F4E7D4;color:#9A8468;
-}
-.tag.t0{background:#FBE0D6;color:#C4704F}
-.tag.t1{background:#E1EFD9;color:#5C8A50}
-.tag.t2{background:#DEE9F5;color:#5A7A9E}
-.meta{
-  display:flex;align-items:center;gap:8px;margin-top:13px;
-  padding-top:11px;border-top:1px dashed var(--line);
-  font-size:11.5px;color:var(--ink-soft);font-weight:600;
-}
+.tag{font-size:11px;font-weight:700;padding:4px 10px;border-radius:99px;background:#F3E7D0;color:#9A8468}
+.tag.t0{background:#FBE0D6;color:#C4704F}.tag.t1{background:#E2EEDA;color:#5C8A50}.tag.t2{background:#DEE9F5;color:#5A7A9E}
+.meta{display:flex;align-items:center;gap:8px;margin-top:13px;padding-top:11px;border-top:1px dashed var(--line);
+  font-size:11.5px;color:var(--ink-soft);font-weight:600}
 .meta .go{margin-left:auto;color:var(--accent-dark);font-weight:800}
-
-/* 即將推出 */
 .card.soon{background:transparent;box-shadow:none;border:2px dashed #D8C6AC;cursor:default}
 .card.soon:hover{transform:none;box-shadow:none}
 .soon-in{padding:30px 20px;text-align:center;color:var(--ink-soft)}
 .soon-in .ico{font-size:30px;display:block;margin-bottom:8px}
 .soon-in b{display:block;font-size:14.5px;color:#8A7A66;margin-bottom:5px}
 .soon-in span{font-size:12px;line-height:1.8}
-
 .empty{text-align:center;color:var(--ink-soft);font-size:13px;padding:40px 10px}
 footer{text-align:center;color:var(--ink-soft);font-size:11px;line-height:2;margin-top:34px}
-
-/* ---------- 平板 / 桌機 ---------- */
 @media (min-width:720px){
   .wrap{max-width:1080px;padding:0 26px 56px}
-  .hero{padding:44px 0 8px}
-  .hero .mark{width:96px;height:96px}
-  .hero h1{font-size:38px;letter-spacing:5px}
-  .hero p{font-size:14.5px}
+  .hero{padding:44px 0 8px}.hero .mark{width:100px;height:100px}
+  .hero h1{font-size:38px;letter-spacing:5px}.hero p{font-size:14.5px}
   .filters{justify-content:center;padding:22px 0 20px;flex-wrap:wrap;overflow:visible}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
   .body h2{font-size:20px}
@@ -133,183 +71,56 @@ footer{text-align:center;color:var(--ink-soft);font-size:11px;line-height:2;marg
 </head>
 <body>
 <div class="wrap">
-
   <header class="hero">
-    <svg class="mark" id="mark" viewBox="0 0 120 120"></svg>
+    <div class="mark"><svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg"><defs>
+<filter id="cr" x="-6%" y="-6%" width="112%" height="112%">
+  <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="3" seed="7" result="n"/>
+  <feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" xChannelSelector="R" yChannelSelector="G"/>
+</filter>
+<filter id="cr2" x="-6%" y="-6%" width="112%" height="112%">
+  <feTurbulence type="fractalNoise" baseFrequency="0.07" numOctaves="2" seed="19" result="n2"/>
+  <feDisplacementMap in="SourceGraphic" in2="n2" scale="1.8" xChannelSelector="R" yChannelSelector="G"/>
+</filter>
+<filter id="grain" x="0" y="0" width="100%" height="100%">
+  <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" result="g"/>
+  <feColorMatrix type="saturate" values="0"/>
+  <feComponentTransfer><feFuncA type="linear" slope="0.09"/></feComponentTransfer>
+  <feBlend in2="SourceGraphic" mode="multiply"/>
+</filter>
+</defs><g filter="url(#cr)"><circle cx="200" cy="150" r="120" fill="#FFF3DF"/><g transform="translate(322,52)"><path d="M30.0,0.0 L41.0,0.0" stroke="#F7D678" stroke-width="4.5" stroke-linecap="round"/><path d="M21.2,21.2 L29.0,29.0" stroke="#F7D678" stroke-width="4.5" stroke-linecap="round"/><path d="M0.0,30.0 L0.0,41.0" stroke="#F7D678" stroke-width="4.5" stroke-linecap="round"/><path d="M-21.2,21.2 L-29.0,29.0" stroke="#F7D678" stroke-width="4.5" stroke-linecap="round"/><path d="M-30.0,0.0 L-41.0,0.1" stroke="#F7D678" stroke-width="4.5" stroke-linecap="round"/><path d="M-21.3,-21.2 L-29.0,-28.9" stroke="#F7D678" stroke-width="4.5" stroke-linecap="round"/><path d="M-0.1,-30.0 L-0.1,-41.0" stroke="#F7D678" stroke-width="4.5" stroke-linecap="round"/><path d="M21.2,-21.3 L28.9,-29.1" stroke="#F7D678" stroke-width="4.5" stroke-linecap="round"/><circle cx="0" cy="0" r="22" fill="#F7D678"/></g><g transform="translate(200,250) scale(1.05,1.05)" filter="url(#cr2)"><ellipse cx="0" cy="2" rx="34" ry="7" fill="#6B5544" opacity=".13"/><circle cx="-28" cy="-32" r="9.5" fill="#FDF7EE" stroke="#6B5544" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/><g transform="rotate(-8 -11 -92)"><ellipse cx="-11" cy="-118" rx="8.5" ry="27" fill="#FDF7EE" stroke="#6B5544" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="-11" cy="-117" rx="4" ry="18" fill="#F3B9C1"/></g><g transform="rotate(8 11 -92)"><ellipse cx="11" cy="-118" rx="8.5" ry="27" fill="#FDF7EE" stroke="#6B5544" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="11" cy="-117" rx="4" ry="18" fill="#F3B9C1"/></g><ellipse cx="-13" cy="-7" rx="12" ry="8" fill="#FDF7EE" stroke="#6B5544" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="13" cy="-7" rx="12" ry="8" fill="#FDF7EE" stroke="#6B5544" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="0" cy="-38" rx="25" ry="30" fill="#FDF7EE" stroke="#6B5544" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="-27" cy="-54" rx="7" ry="15" fill="#FDF7EE" stroke="#6B5544" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" transform="rotate(-42 -27 -54)"/><ellipse cx="27" cy="-54" rx="7" ry="15" fill="#FDF7EE" stroke="#6B5544" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" transform="rotate(42 27 -54)"/><circle cx="0" cy="-78" r="27" fill="#FDF7EE" stroke="#6B5544" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="-19" cy="-71" rx="6.5" ry="4.5" fill="#F3B9C1" opacity=".7"/><ellipse cx="19" cy="-71" rx="6.5" ry="4.5" fill="#F3B9C1" opacity=".7"/><path d="M-14.5,-80 q4.5,-6.5 9,0" fill="none" stroke="#6B5544" stroke-width="2.6" stroke-linecap="round"/><path d="M5.5,-80 q4.5,-6.5 9,0" fill="none" stroke="#6B5544" stroke-width="2.6" stroke-linecap="round"/><path d="M-5,-68 q5,6.5 10,0" fill="none" stroke="#6B5544" stroke-width="1.9" stroke-linecap="round"/><path d="M-3.8,-74 L3.8,-74 L0,-69.4 Z" fill="#8A7259"/></g></g><rect width="400" height="300" filter="url(#grain)" fill="#fff" opacity=".55" style="mix-blend-mode:multiply" pointer-events="none"/></svg></div>
     <h1>小小繪本書架</h1>
     <div class="en">LITTLE PICTURE BOOK SHELF</div>
     <p>會說故事的繪本。<br>按下播放鍵，就有人陪孩子一起唸。</p>
     <div class="count" id="count"></div>
   </header>
-
   <nav class="filters" id="filters"></nav>
   <main class="grid" id="grid"></main>
-
-  <footer>
-    每一本都可離線閱讀 ・ 手機 / 平板 / 電腦皆可<br>
-    插圖由程式繪製，無外部圖片依賴
-  </footer>
+  <footer>每一本都可離線閱讀 ・ 手機 / 平板 / 電腦皆可<br>插圖由程式繪製的 SVG 組成，無外部圖片依賴</footer>
 </div>
-
 <script>
-/* =========================================================
-   ★ 要新增繪本，只要在 BOOKS 陣列加一筆就好 ★
-   cover 對應下方 COVERS 裡的封面函式；
-   還沒畫封面的話，先寫 cover:'generic' 也可以。
-   ========================================================= */
-const BOOKS = [
-  {
-    id:    'rabbit-courage',
-    title: '小豆的勇氣',
-    en:    "A LITTLE RABBIT'S COURAGE",
-    desc:  '一隻好黏媽媽的小兔子，在一次自己去採紅蘿蔔的旅程裡迷了路。哭過之後，他想起媽媽說的話 —— 勇敢，不是不害怕。',
-    tags:  ['勇氣','獨立','親子'],
-    age:   '4-6 歲',
-    pages: 8,
-    mins:  3,
-    href:  'books/rabbit-courage/index.html',
-    cover: 'rabbitCourage'
-  }
-  /* 下一本這樣加：
-  ,{
-    id:'seed-patience', title:'一顆很慢很慢的種子', en:'THE SLOW LITTLE SEED',
-    desc:'一顆種子怎麼也長不快，其他花都開了，只有它還埋在土裡……',
-    tags:['耐心','成長'], age:'4-6 歲', pages:8, mins:3,
-    href:'books/seed-patience/index.html', cover:'generic'
-  }
-  */
-];
-
-/* =========================================================
-   封面插圖（SVG，與繪本內頁同一套畫風與配色）
-   ========================================================= */
-const FUR='#FDF7EE', PINK='#F6C3C9', INK='#3F3329';
-
-function rabbit(o){
-  const s=o.s??1, x=o.x??0, y=o.y??0, f=o.fur??FUR, expr=o.expr??'calm';
-  const bodyCy=-38, bodyRy=30, bodyRx=25, hCy=-78, earTop=hCy-40, ey=hCy-3;
-  const ear=sx=>`<g transform="rotate(${sx*8} ${sx*11} ${hCy-14})">
-      <ellipse cx="${sx*11}" cy="${earTop}" rx="8.5" ry="27" fill="${f}" stroke="${INK}" stroke-width="1.6"/>
-      <ellipse cx="${sx*11}" cy="${earTop+1}" rx="4" ry="18" fill="${PINK}"/></g>`;
-  let face='';
-  if(expr==='brave'){
-    face=`<circle cx="-10" cy="${ey}" r="3.8" fill="${INK}"/><circle cx="10" cy="${ey}" r="3.8" fill="${INK}"/>
-      <circle cx="-8.8" cy="${ey-1.4}" r="1.2" fill="#fff"/><circle cx="11.2" cy="${ey-1.4}" r="1.2" fill="#fff"/>
-      <path d="M-16,${ey-9} q5,2.5 9,4" stroke="${INK}" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-      <path d="M16,${ey-9} q-5,2.5 -9,4" stroke="${INK}" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-      <path d="M-4.5,${hCy+12} L4.5,${hCy+12}" stroke="${INK}" stroke-width="1.9" stroke-linecap="round"/>`;
-  }else{
-    face=`<path d="M-14.5,${ey+1} q4.5,-6.5 9,0" stroke="${INK}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
-      <path d="M5.5,${ey+1} q4.5,-6.5 9,0" stroke="${INK}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
-      <path d="M-5,${hCy+10} q5,6 10,0" stroke="${INK}" stroke-width="1.8" fill="none" stroke-linecap="round"/>`;
-  }
-  const arms = o.arms==='up'
-    ? `<ellipse cx="-27" cy="${bodyCy-16}" rx="7" ry="15" fill="${f}" stroke="${INK}" stroke-width="1.5" transform="rotate(-42 -27 ${bodyCy-16})"/>
-       <ellipse cx="27" cy="${bodyCy-16}" rx="7" ry="15" fill="${f}" stroke="${INK}" stroke-width="1.5" transform="rotate(42 27 ${bodyCy-16})"/>`
-    : `<ellipse cx="-23" cy="${bodyCy-2}" rx="7" ry="14" fill="${f}" stroke="${INK}" stroke-width="1.5" transform="rotate(9 -23 ${bodyCy-2})"/>
-       <ellipse cx="23" cy="${bodyCy-2}" rx="7" ry="14" fill="${f}" stroke="${INK}" stroke-width="1.5" transform="rotate(-9 23 ${bodyCy-2})"/>`;
-  return `<g transform="translate(${x},${y}) scale(${s})">
-    <ellipse cx="0" cy="2" rx="34" ry="7" fill="rgba(20,10,40,.22)"/>
-    <circle cx="-28" cy="${bodyCy+6}" r="9.5" fill="${f}" stroke="${INK}" stroke-width="1.5"/>
-    ${ear(-1)}${ear(1)}
-    <ellipse cx="-13" cy="-7" rx="12" ry="8" fill="${f}" stroke="${INK}" stroke-width="1.5"/>
-    <ellipse cx="13" cy="-7" rx="12" ry="8" fill="${f}" stroke="${INK}" stroke-width="1.5"/>
-    <ellipse cx="0" cy="${bodyCy}" rx="${bodyRx}" ry="${bodyRy}" fill="${f}" stroke="${INK}" stroke-width="1.6"/>
-    ${arms}
-    <circle cx="0" cy="${hCy}" r="27" fill="${f}" stroke="${INK}" stroke-width="1.6"/>
-    <ellipse cx="-19" cy="${hCy+7}" rx="6" ry="4" fill="${PINK}" opacity=".75"/>
-    <ellipse cx="19" cy="${hCy+7}" rx="6" ry="4" fill="${PINK}" opacity=".75"/>
-    ${face}
-    <path d="M-3.6,${hCy+4} L3.6,${hCy+4} L0,${hCy+8.4} Z" fill="#E4939C"/>
-  </g>`;
-}
-const star=(x,y,r,o=1)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#FFF6D6" opacity="${o}"/>`;
-const pine=(x,y,s,c)=>`<path d="M${x},${y-70*s} L${x-30*s},${y} L${x+30*s},${y} Z" fill="${c}"/>`;
-const tree=(x,y,s,c1='#6FAE6B',c2='#4F8C51')=>`<g transform="translate(${x},${y}) scale(${s})">
-  <rect x="-7" y="-40" width="14" height="44" rx="6" fill="#9A6F46"/>
-  <circle cx="0" cy="-58" r="30" fill="${c1}"/><circle cx="-20" cy="-44" r="21" fill="${c2}"/>
-  <circle cx="21" cy="-46" r="22" fill="${c1}"/><circle cx="2" cy="-78" r="20" fill="${c2}"/></g>`;
-
-const COVERS = {
-  /* 小豆的勇氣：月夜，小兔子抬頭站著 */
-  rabbitCourage:()=>`
-    <defs><linearGradient id="c1sky" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#242F5E"/><stop offset="100%" stop-color="#41508A"/></linearGradient>
-      <radialGradient id="c1moon"><stop offset="0%" stop-color="#FFF8D8"/><stop offset="100%" stop-color="#FFE28E"/></radialGradient></defs>
-    <rect width="400" height="260" fill="url(#c1sky)"/>
-    <circle cx="306" cy="72" r="72" fill="#FFF3C4" opacity=".13"/>
-    <circle cx="306" cy="72" r="46" fill="url(#c1moon)"/>
-    <circle cx="290" cy="60" r="7" fill="#F3D482" opacity=".55"/>
-    <circle cx="320" cy="88" r="9" fill="#F3D482" opacity=".45"/>
-    ${star(46,44,2.4)}${star(104,26,1.7)}${star(150,62,2)}${star(58,104,1.5)}${star(210,34,1.8)}${star(372,140,1.6)}${star(28,158,1.4)}${star(176,104,1.3)}
-    ${pine(46,214,1.15,'#1B2547')}${pine(96,214,.85,'#212B52')}${pine(360,214,1.05,'#1B2547')}
-    <rect y="206" width="400" height="54" fill="#1D2750"/>
-    <path d="M0,206 q110,-14 220,4 t180,-8 v58 H0z" fill="#23305C"/>
-    <ellipse cx="196" cy="212" rx="76" ry="30" fill="#FFF0B8" opacity=".08"/>
-    ${rabbit({x:196,y:224,s:.72,expr:'brave'})}
-    <path d="M232,150 q34,-24 62,-46" stroke="#FFF3C4" stroke-width="1.8" stroke-dasharray="3 7" fill="none" opacity=".45"/>`,
-
-  /* 通用備用封面：白天的小山丘（新繪本還沒畫封面時先用） */
-  generic:()=>`
-    <defs><linearGradient id="cgsky" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#CFE9F5"/><stop offset="100%" stop-color="#EAF6E8"/></linearGradient></defs>
-    <rect width="400" height="260" fill="url(#cgsky)"/>
-    <circle cx="330" cy="52" r="30" fill="#FFD05C"/><circle cx="330" cy="52" r="44" fill="#FFD05C" opacity=".22"/>
-    <g fill="#fff" opacity=".85">
-      <circle cx="74" cy="52" r="15"/><circle cx="96" cy="44" r="19"/><circle cx="118" cy="53" r="14"/>
-      <rect x="74" y="46" width="44" height="16" rx="8"/>
-    </g>
-    <rect y="186" width="400" height="74" fill="#8CC77E"/>
-    <path d="M0,186 q100,-20 200,-2 t200,-4 v82 H0z" fill="#7CBB70"/>
-    <ellipse cx="120" cy="214" rx="150" ry="46" fill="#8CC77E"/>
-    ${tree(330,206,.95)}${tree(58,200,.7,'#7CBB70','#5C9A5E')}
-    <circle cx="196" cy="196" r="15" fill="#EE8A3D"/>
-    <path d="M188,182 q8,-16 16,0z" fill="#5FA65C"/>`
-};
-
-/* =========================================================
-   渲染
-   ========================================================= */
+const BOOKS = [{"slug": "rabbit-courage", "title": "小豆的勇氣", "en": "A LITTLE RABBIT'S COURAGE", "desc": "一隻好黏媽媽的小兔子，在一次自己去採紅蘿蔔的旅程裡迷了路。哭過之後，他想起媽媽說的話——勇敢，不是不害怕。", "tags": ["勇氣", "獨立", "親子"], "age": "4-6 歲", "mins": 3, "pages": 8, "href": "books/rabbit-courage/index.html", "cover": "<svg viewBox=\"0 0 400 300\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><defs>\n<filter id=\"cr\" x=\"-6%\" y=\"-6%\" width=\"112%\" height=\"112%\">\n  <feTurbulence type=\"fractalNoise\" baseFrequency=\"0.045\" numOctaves=\"3\" seed=\"7\" result=\"n\"/>\n  <feDisplacementMap in=\"SourceGraphic\" in2=\"n\" scale=\"2.6\" xChannelSelector=\"R\" yChannelSelector=\"G\"/>\n</filter>\n<filter id=\"cr2\" x=\"-6%\" y=\"-6%\" width=\"112%\" height=\"112%\">\n  <feTurbulence type=\"fractalNoise\" baseFrequency=\"0.07\" numOctaves=\"2\" seed=\"19\" result=\"n2\"/>\n  <feDisplacementMap in=\"SourceGraphic\" in2=\"n2\" scale=\"1.8\" xChannelSelector=\"R\" yChannelSelector=\"G\"/>\n</filter>\n<filter id=\"grain\" x=\"0\" y=\"0\" width=\"100%\" height=\"100%\">\n  <feTurbulence type=\"fractalNoise\" baseFrequency=\"0.9\" numOctaves=\"2\" seed=\"3\" result=\"g\"/>\n  <feColorMatrix type=\"saturate\" values=\"0\"/>\n  <feComponentTransfer><feFuncA type=\"linear\" slope=\"0.09\"/></feComponentTransfer>\n  <feBlend in2=\"SourceGraphic\" mode=\"multiply\"/>\n</filter>\n</defs><g filter=\"url(#cr)\"><defs><linearGradient id=\"nk\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#4A5580\"/><stop offset=\"100%\" stop-color=\"#6B76A3\"/></linearGradient></defs><rect x=\"-12\" y=\"-12\" width=\"424\" height=\"324\" fill=\"url(#nk)\"/><path d=\"M-12,222 q106,-16 212,0 t212,-6 v102 H-12z\" fill=\"#3E4870\"/><g transform=\"translate(306,74)\"><circle cx=\"0\" cy=\"0\" r=\"64\" fill=\"#FBEFC0\" opacity=\".14\"/><circle cx=\"0\" cy=\"0\" r=\"42\" fill=\"#FBEFC0\"/><circle cx=\"-13\" cy=\"-10\" r=\"7\" fill=\"#EDD9A0\" opacity=\".6\"/><circle cx=\"10\" cy=\"13\" r=\"8\" fill=\"#EDD9A0\" opacity=\".5\"/></g><circle cx=\"50\" cy=\"40\" r=\"2.4\" fill=\"#FBEFC0\" opacity=\"1\"/><circle cx=\"112\" cy=\"66\" r=\"1.8\" fill=\"#FBEFC0\" opacity=\"1\"/><circle cx=\"360\" cy=\"124\" r=\"1.6\" fill=\"#FBEFC0\" opacity=\"1\"/><circle cx=\"196\" cy=\"30\" r=\"1.5\" fill=\"#FBEFC0\" opacity=\"1\"/><circle cx=\"60\" cy=\"150\" r=\"1.3\" fill=\"#FBEFC0\" opacity=\"1\"/><g transform=\"translate(46,254) scale(0.85)\"><rect x=\"-5\" y=\"-16\" width=\"10\" height=\"18\" rx=\"4\" fill=\"#A2714F\"/><path d=\"M0,-78 L-26,-30 L26,-30 Z\" fill=\"#2F3A5E\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M0,-56 L-32,-10 L32,-10 Z\" fill=\"#2F3A5E\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(358,258) scale(0.75)\"><rect x=\"-5\" y=\"-16\" width=\"10\" height=\"18\" rx=\"4\" fill=\"#A2714F\"/><path d=\"M0,-78 L-26,-30 L26,-30 Z\" fill=\"#2F3A5E\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M0,-56 L-32,-10 L32,-10 Z\" fill=\"#2F3A5E\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(190,268) scale(0.78,0.78)\" filter=\"url(#cr2)\"><ellipse cx=\"0\" cy=\"2\" rx=\"34\" ry=\"7\" fill=\"#6B5544\" opacity=\".13\"/><circle cx=\"-28\" cy=\"-32\" r=\"9.5\" fill=\"#FDF7EE\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><g transform=\"rotate(-8 -11 -92)\"><ellipse cx=\"-11\" cy=\"-118\" rx=\"8.5\" ry=\"27\" fill=\"#FDF7EE\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-11\" cy=\"-117\" rx=\"4\" ry=\"18\" fill=\"#F3B9C1\"/></g><g transform=\"rotate(8 11 -92)\"><ellipse cx=\"11\" cy=\"-118\" rx=\"8.5\" ry=\"27\" fill=\"#FDF7EE\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"11\" cy=\"-117\" rx=\"4\" ry=\"18\" fill=\"#F3B9C1\"/></g><ellipse cx=\"-13\" cy=\"-7\" rx=\"12\" ry=\"8\" fill=\"#FDF7EE\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"13\" cy=\"-7\" rx=\"12\" ry=\"8\" fill=\"#FDF7EE\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-38\" rx=\"25\" ry=\"30\" fill=\"#FDF7EE\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-23\" cy=\"-40\" rx=\"7\" ry=\"14\" fill=\"#FDF7EE\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\" transform=\"rotate(9 -23 -40)\"/><ellipse cx=\"23\" cy=\"-40\" rx=\"7\" ry=\"14\" fill=\"#FDF7EE\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\" transform=\"rotate(-9 23 -40)\"/><circle cx=\"0\" cy=\"-78\" r=\"27\" fill=\"#FDF7EE\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-19\" cy=\"-71\" rx=\"6.5\" ry=\"4.5\" fill=\"#F3B9C1\" opacity=\".7\"/><ellipse cx=\"19\" cy=\"-71\" rx=\"6.5\" ry=\"4.5\" fill=\"#F3B9C1\" opacity=\".7\"/><circle cx=\"-10\" cy=\"-81\" r=\"3.9\" fill=\"#6B5544\"/><circle cx=\"10\" cy=\"-81\" r=\"3.9\" fill=\"#6B5544\"/><circle cx=\"-8.7\" cy=\"-82.4\" r=\"1.3\" fill=\"#fff\"/><circle cx=\"11.3\" cy=\"-82.4\" r=\"1.3\" fill=\"#fff\"/><path d=\"M-16,-90 q5,2.5 9,4\" fill=\"none\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linecap=\"round\"/><path d=\"M16,-90 q-5,2.5 -9,4\" fill=\"none\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linecap=\"round\"/><path d=\"M-4.5,-67 L4.5,-67\" stroke=\"#6B5544\" stroke-width=\"2\" stroke-linecap=\"round\"/><path d=\"M-3.8,-74 L3.8,-74 L0,-69.4 Z\" fill=\"#8A7259\"/></g><path d=\"M224,196 q36,-24 62,-46\" stroke=\"#FBEFC0\" stroke-width=\"2\" stroke-dasharray=\"3 7\" fill=\"none\" opacity=\".45\"/><g transform=\"translate(130,150) scale(1)\"><path d=\"M0,-11 L2.6,-2.6 L11,0 L2.6,2.6 L0,11 L-2.6,2.6 L-11,0 L-2.6,-2.6 Z\" fill=\"#F7D678\"/></g><g transform=\"translate(258,128) scale(0.8)\"><path d=\"M0,-11 L2.6,-2.6 L11,0 L2.6,2.6 L0,11 L-2.6,2.6 L-11,0 L-2.6,-2.6 Z\" fill=\"#F7D678\"/></g></g><rect width=\"400\" height=\"300\" filter=\"url(#grain)\" fill=\"#fff\" opacity=\".55\" style=\"mix-blend-mode:multiply\" pointer-events=\"none\"/></svg>"}, {"slug": "bear-scarf", "title": "熊媽媽的圍巾", "en": "MAMA BEAR'S SCARF", "desc": "小熊呼呼有一條媽媽織的長圍巾。有一天圍巾在森林裡不見了，他不敢回家——直到媽媽張開手臂說：媽媽的手還在呀。", "tags": ["親情", "家庭", "溫暖"], "age": "3-5 歲", "mins": 4, "pages": 12, "href": "books/bear-scarf/index.html", "cover": "<svg viewBox=\"0 0 400 300\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><defs>\n<filter id=\"cr\" x=\"-6%\" y=\"-6%\" width=\"112%\" height=\"112%\">\n  <feTurbulence type=\"fractalNoise\" baseFrequency=\"0.045\" numOctaves=\"3\" seed=\"7\" result=\"n\"/>\n  <feDisplacementMap in=\"SourceGraphic\" in2=\"n\" scale=\"2.6\" xChannelSelector=\"R\" yChannelSelector=\"G\"/>\n</filter>\n<filter id=\"cr2\" x=\"-6%\" y=\"-6%\" width=\"112%\" height=\"112%\">\n  <feTurbulence type=\"fractalNoise\" baseFrequency=\"0.07\" numOctaves=\"2\" seed=\"19\" result=\"n2\"/>\n  <feDisplacementMap in=\"SourceGraphic\" in2=\"n2\" scale=\"1.8\" xChannelSelector=\"R\" yChannelSelector=\"G\"/>\n</filter>\n<filter id=\"grain\" x=\"0\" y=\"0\" width=\"100%\" height=\"100%\">\n  <feTurbulence type=\"fractalNoise\" baseFrequency=\"0.9\" numOctaves=\"2\" seed=\"3\" result=\"g\"/>\n  <feColorMatrix type=\"saturate\" values=\"0\"/>\n  <feComponentTransfer><feFuncA type=\"linear\" slope=\"0.09\"/></feComponentTransfer>\n  <feBlend in2=\"SourceGraphic\" mode=\"multiply\"/>\n</filter>\n</defs><g filter=\"url(#cr)\"><defs><linearGradient id=\"dk\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#8E9FCB\"/><stop offset=\"55%\" stop-color=\"#C6A3B8\"/><stop offset=\"100%\" stop-color=\"#F2B48C\"/></linearGradient></defs><rect x=\"-12\" y=\"-12\" width=\"424\" height=\"324\" fill=\"url(#dk)\"/><path d=\"M-12,214 q106,-16 212,0 t212,-6 v110 H-12z\" fill=\"#7E8F6E\"/><g transform=\"translate(320,62)\"><circle cx=\"0\" cy=\"0\" r=\"52\" fill=\"#FBEFC0\" opacity=\".14\"/><circle cx=\"0\" cy=\"0\" r=\"30\" fill=\"#FBEFC0\"/><circle cx=\"-9\" cy=\"-8\" r=\"5\" fill=\"#EDD9A0\" opacity=\".6\"/><circle cx=\"8\" cy=\"9\" r=\"6\" fill=\"#EDD9A0\" opacity=\".5\"/></g><circle cx=\"60\" cy=\"44\" r=\"2.2\" fill=\"#FBEFC0\" opacity=\"1\"/><circle cx=\"130\" cy=\"30\" r=\"1.6\" fill=\"#FBEFC0\" opacity=\"1\"/><g transform=\"translate(46,250) scale(0.9)\"><rect x=\"-5\" y=\"-16\" width=\"10\" height=\"18\" rx=\"4\" fill=\"#A2714F\"/><path d=\"M0,-78 L-26,-30 L26,-30 Z\" fill=\"#5A6B52\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M0,-56 L-32,-10 L32,-10 Z\" fill=\"#5A6B52\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(358,246) scale(0.8)\"><rect x=\"-5\" y=\"-16\" width=\"10\" height=\"18\" rx=\"4\" fill=\"#A2714F\"/><path d=\"M0,-78 L-26,-30 L26,-30 Z\" fill=\"#5A6B52\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M0,-56 L-32,-10 L32,-10 Z\" fill=\"#5A6B52\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(170,272) scale(0.8,0.8)\" filter=\"url(#cr2)\"><ellipse cx=\"0\" cy=\"2\" rx=\"34\" ry=\"7\" fill=\"#6B5544\" opacity=\".13\"/><circle cx=\"-27\" cy=\"-30\" r=\"7\" fill=\"#B0825C\" stroke=\"#6B5544\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"-20\" cy=\"-100\" r=\"11\" fill=\"#B0825C\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"-20\" cy=\"-100\" r=\"5.5\" fill=\"#E8C6A6\"/><circle cx=\"20\" cy=\"-100\" r=\"11\" fill=\"#B0825C\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"20\" cy=\"-100\" r=\"5.5\" fill=\"#E8C6A6\"/><ellipse cx=\"-13\" cy=\"-7\" rx=\"12\" ry=\"8\" fill=\"#B0825C\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"13\" cy=\"-7\" rx=\"12\" ry=\"8\" fill=\"#B0825C\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-38\" rx=\"25\" ry=\"30\" fill=\"#B0825C\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-30\" rx=\"15.0\" ry=\"18.0\" fill=\"#F6E7CE\" opacity=\".85\"/><ellipse cx=\"-23\" cy=\"-40\" rx=\"7\" ry=\"14\" fill=\"#B0825C\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\" transform=\"rotate(9 -23 -40)\"/><ellipse cx=\"23\" cy=\"-40\" rx=\"7\" ry=\"14\" fill=\"#B0825C\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\" transform=\"rotate(-9 23 -40)\"/><circle cx=\"0\" cy=\"-78\" r=\"27\" fill=\"#B0825C\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-67\" rx=\"14\" ry=\"10\" fill=\"#F6E7CE\" stroke=\"#6B5544\" stroke-width=\"1.4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-19\" cy=\"-71\" rx=\"6.5\" ry=\"4.5\" fill=\"#F3B9C1\" opacity=\".7\"/><ellipse cx=\"19\" cy=\"-71\" rx=\"6.5\" ry=\"4.5\" fill=\"#F3B9C1\" opacity=\".7\"/><path d=\"M-14.5,-80 q4.5,-6.5 9,0\" fill=\"none\" stroke=\"#6B5544\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M5.5,-80 q4.5,-6.5 9,0\" fill=\"none\" stroke=\"#6B5544\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M-5,-65 q5,6.5 10,0\" fill=\"none\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linecap=\"round\"/><path d=\"M-3.8,-71 L3.8,-71 L0,-66.4 Z\" fill=\"#8A7259\"/></g><g transform=\"translate(246,270) scale(0.5,0.5)\" filter=\"url(#cr2)\"><ellipse cx=\"0\" cy=\"2\" rx=\"34\" ry=\"7\" fill=\"#6B5544\" opacity=\".13\"/><circle cx=\"-27\" cy=\"-30\" r=\"7\" fill=\"#B0825C\" stroke=\"#6B5544\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"-20\" cy=\"-100\" r=\"11\" fill=\"#C99B6E\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"-20\" cy=\"-100\" r=\"5.5\" fill=\"#E8C6A6\"/><circle cx=\"20\" cy=\"-100\" r=\"11\" fill=\"#C99B6E\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"20\" cy=\"-100\" r=\"5.5\" fill=\"#E8C6A6\"/><ellipse cx=\"-13\" cy=\"-7\" rx=\"12\" ry=\"8\" fill=\"#C99B6E\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"13\" cy=\"-7\" rx=\"12\" ry=\"8\" fill=\"#C99B6E\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-38\" rx=\"25\" ry=\"30\" fill=\"#C99B6E\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-30\" rx=\"15.0\" ry=\"18.0\" fill=\"#F6E7CE\" opacity=\".85\"/><ellipse cx=\"-23\" cy=\"-40\" rx=\"7\" ry=\"14\" fill=\"#C99B6E\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\" transform=\"rotate(9 -23 -40)\"/><ellipse cx=\"23\" cy=\"-40\" rx=\"7\" ry=\"14\" fill=\"#C99B6E\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\" transform=\"rotate(-9 23 -40)\"/><circle cx=\"0\" cy=\"-78\" r=\"27\" fill=\"#C99B6E\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-67\" rx=\"14\" ry=\"10\" fill=\"#F6E7CE\" stroke=\"#6B5544\" stroke-width=\"1.4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-19\" cy=\"-71\" rx=\"6.5\" ry=\"4.5\" fill=\"#F3B9C1\" opacity=\".7\"/><ellipse cx=\"19\" cy=\"-71\" rx=\"6.5\" ry=\"4.5\" fill=\"#F3B9C1\" opacity=\".7\"/><path d=\"M-14.5,-80 q4.5,-6.5 9,0\" fill=\"none\" stroke=\"#6B5544\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M5.5,-80 q4.5,-6.5 9,0\" fill=\"none\" stroke=\"#6B5544\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M-5,-65 q5,6.5 10,0\" fill=\"none\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linecap=\"round\"/><path d=\"M-3.8,-71 L3.8,-71 L0,-66.4 Z\" fill=\"#8A7259\"/></g><path d=\"M170,214 q40,-4 76,8 q-38,14 -76,2\" fill=\"none\" stroke=\"#E8907F\" stroke-width=\"7\" stroke-linecap=\"round\"/><path d=\"M208,131.7 C193.7,117.4 196.3,104.4 208,112.2 C219.7,104.4 222.3,117.4 208,131.7 Z\" fill=\"#E8907F\" opacity=\".9\"/><path d=\"M266,103.2 C257.2,94.4 258.8,86.4 266,91.2 C273.2,86.4 274.8,94.4 266,103.2 Z\" fill=\"#E8907F\" opacity=\".9\"/></g><rect width=\"400\" height=\"300\" filter=\"url(#grain)\" fill=\"#fff\" opacity=\".55\" style=\"mix-blend-mode:multiply\" pointer-events=\"none\"/></svg>"}, {"slug": "owl-flight", "title": "飛不起來的咕咕", "en": "THE OWL WHO COULD NOT FLY", "desc": "森林裡的貓頭鷹晚上都會飛，只有咕咕怎麼拍翅膀都飛不起來。跳了十七次之後，老貓頭鷹說：那就再跳一次。", "tags": ["學習", "堅持", "成長"], "age": "4-6 歲", "mins": 4, "pages": 12, "href": "books/owl-flight/index.html", "cover": "<svg viewBox=\"0 0 400 300\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><defs>\n<filter id=\"cr\" x=\"-6%\" y=\"-6%\" width=\"112%\" height=\"112%\">\n  <feTurbulence type=\"fractalNoise\" baseFrequency=\"0.045\" numOctaves=\"3\" seed=\"7\" result=\"n\"/>\n  <feDisplacementMap in=\"SourceGraphic\" in2=\"n\" scale=\"2.6\" xChannelSelector=\"R\" yChannelSelector=\"G\"/>\n</filter>\n<filter id=\"cr2\" x=\"-6%\" y=\"-6%\" width=\"112%\" height=\"112%\">\n  <feTurbulence type=\"fractalNoise\" baseFrequency=\"0.07\" numOctaves=\"2\" seed=\"19\" result=\"n2\"/>\n  <feDisplacementMap in=\"SourceGraphic\" in2=\"n2\" scale=\"1.8\" xChannelSelector=\"R\" yChannelSelector=\"G\"/>\n</filter>\n<filter id=\"grain\" x=\"0\" y=\"0\" width=\"100%\" height=\"100%\">\n  <feTurbulence type=\"fractalNoise\" baseFrequency=\"0.9\" numOctaves=\"2\" seed=\"3\" result=\"g\"/>\n  <feColorMatrix type=\"saturate\" values=\"0\"/>\n  <feComponentTransfer><feFuncA type=\"linear\" slope=\"0.09\"/></feComponentTransfer>\n  <feBlend in2=\"SourceGraphic\" mode=\"multiply\"/>\n</filter>\n</defs><g filter=\"url(#cr)\"><defs><linearGradient id=\"nk\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#4A5580\"/><stop offset=\"100%\" stop-color=\"#6B76A3\"/></linearGradient></defs><rect x=\"-12\" y=\"-12\" width=\"424\" height=\"324\" fill=\"url(#nk)\"/><path d=\"M-12,222 q106,-16 212,0 t212,-6 v102 H-12z\" fill=\"#3E4870\"/><g transform=\"translate(300,74)\"><circle cx=\"0\" cy=\"0\" r=\"62\" fill=\"#FBEFC0\" opacity=\".14\"/><circle cx=\"0\" cy=\"0\" r=\"40\" fill=\"#FBEFC0\"/><circle cx=\"-12\" cy=\"-10\" r=\"6\" fill=\"#EDD9A0\" opacity=\".6\"/><circle cx=\"10\" cy=\"12\" r=\"8\" fill=\"#EDD9A0\" opacity=\".5\"/></g><circle cx=\"50\" cy=\"40\" r=\"2.4\" fill=\"#FBEFC0\" opacity=\"1\"/><circle cx=\"110\" cy=\"66\" r=\"1.8\" fill=\"#FBEFC0\" opacity=\"1\"/><circle cx=\"360\" cy=\"120\" r=\"1.6\" fill=\"#FBEFC0\" opacity=\"1\"/><circle cx=\"200\" cy=\"34\" r=\"1.5\" fill=\"#FBEFC0\" opacity=\"1\"/><g transform=\"translate(46,258) scale(0.8)\"><rect x=\"-5\" y=\"-16\" width=\"10\" height=\"18\" rx=\"4\" fill=\"#A2714F\"/><path d=\"M0,-78 L-26,-30 L26,-30 Z\" fill=\"#2F3A5E\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M0,-56 L-32,-10 L32,-10 Z\" fill=\"#2F3A5E\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(360,262) scale(0.7)\"><rect x=\"-5\" y=\"-16\" width=\"10\" height=\"18\" rx=\"4\" fill=\"#A2714F\"/><path d=\"M0,-78 L-26,-30 L26,-30 Z\" fill=\"#2F3A5E\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M0,-56 L-32,-10 L32,-10 Z\" fill=\"#2F3A5E\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(190,190) scale(0.74,0.74)\" filter=\"url(#cr2)\"><ellipse cx=\"0\" cy=\"2\" rx=\"34\" ry=\"7\" fill=\"#6B5544\" opacity=\".13\"/><path d=\"M-12,-100 L-20,-120 L-26,-96 Z\" fill=\"#AD8C6D\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M12,-100 L20,-120 L26,-96 Z\" fill=\"#AD8C6D\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-13\" cy=\"-7\" rx=\"12\" ry=\"8\" fill=\"#C9A98A\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"13\" cy=\"-7\" rx=\"12\" ry=\"8\" fill=\"#C9A98A\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-38\" rx=\"25\" ry=\"30\" fill=\"#C9A98A\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M-24,-46 q-22,-14 -24,-34 q16,6 26,20z\" fill=\"#AD8C6D\" stroke=\"#6B5544\" stroke-width=\"1.7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M24,-46 q22,-14 24,-34 q-16,6 -26,20z\" fill=\"#AD8C6D\" stroke=\"#6B5544\" stroke-width=\"1.7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"0\" cy=\"-78\" r=\"27\" fill=\"#C9A98A\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"-11\" cy=\"-81\" r=\"13\" fill=\"#FDF8F0\" stroke=\"#6B5544\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"11\" cy=\"-81\" r=\"13\" fill=\"#FDF8F0\" stroke=\"#6B5544\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M-7,-72 l7,9 l7,-9z\" fill=\"#F0A45C\" stroke=\"#6B5544\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-19\" cy=\"-71\" rx=\"6.5\" ry=\"4.5\" fill=\"#F3B9C1\" opacity=\".7\"/><ellipse cx=\"19\" cy=\"-71\" rx=\"6.5\" ry=\"4.5\" fill=\"#F3B9C1\" opacity=\".7\"/><circle cx=\"-10\" cy=\"-81\" r=\"4.6\" fill=\"#6B5544\"/><circle cx=\"10\" cy=\"-81\" r=\"4.6\" fill=\"#6B5544\"/><circle cx=\"-8.4\" cy=\"-83\" r=\"1.7\" fill=\"#fff\"/><circle cx=\"11.6\" cy=\"-83\" r=\"1.7\" fill=\"#fff\"/><path d=\"M-16,-91 q5,-4 9,-2\" fill=\"none\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linecap=\"round\"/><path d=\"M16,-91 q-5,-4 -9,-2\" fill=\"none\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linecap=\"round\"/></g><g transform=\"translate(130,140) scale(1.1)\"><path d=\"M0,-11 L2.6,-2.6 L11,0 L2.6,2.6 L0,11 L-2.6,2.6 L-11,0 L-2.6,-2.6 Z\" fill=\"#F7D678\"/></g><g transform=\"translate(258,126) scale(0.9)\"><path d=\"M0,-11 L2.6,-2.6 L11,0 L2.6,2.6 L0,11 L-2.6,2.6 L-11,0 L-2.6,-2.6 Z\" fill=\"#F7D678\"/></g></g><rect width=\"400\" height=\"300\" filter=\"url(#grain)\" fill=\"#fff\" opacity=\".55\" style=\"mix-blend-mode:multiply\" pointer-events=\"none\"/></svg>"}, {"slug": "fox-sorry", "title": "打破的那個杯子", "en": "THE CUP THAT BROKE", "desc": "小狐狸阿吉打破了奶奶最珍惜的藍杯子，把碎片藏了起來。那一夜他怎麼也睡不著——因為杯子會裂，藏起來的話會一直裂著。", "tags": ["認錯", "誠實", "勇氣"], "age": "5-7 歲", "mins": 5, "pages": 12, "href": "books/fox-sorry/index.html", "cover": "<svg viewBox=\"0 0 400 300\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><defs>\n<filter id=\"cr\" x=\"-6%\" y=\"-6%\" width=\"112%\" height=\"112%\">\n  <feTurbulence type=\"fractalNoise\" baseFrequency=\"0.045\" numOctaves=\"3\" seed=\"7\" result=\"n\"/>\n  <feDisplacementMap in=\"SourceGraphic\" in2=\"n\" scale=\"2.6\" xChannelSelector=\"R\" yChannelSelector=\"G\"/>\n</filter>\n<filter id=\"cr2\" x=\"-6%\" y=\"-6%\" width=\"112%\" height=\"112%\">\n  <feTurbulence type=\"fractalNoise\" baseFrequency=\"0.07\" numOctaves=\"2\" seed=\"19\" result=\"n2\"/>\n  <feDisplacementMap in=\"SourceGraphic\" in2=\"n2\" scale=\"1.8\" xChannelSelector=\"R\" yChannelSelector=\"G\"/>\n</filter>\n<filter id=\"grain\" x=\"0\" y=\"0\" width=\"100%\" height=\"100%\">\n  <feTurbulence type=\"fractalNoise\" baseFrequency=\"0.9\" numOctaves=\"2\" seed=\"3\" result=\"g\"/>\n  <feColorMatrix type=\"saturate\" values=\"0\"/>\n  <feComponentTransfer><feFuncA type=\"linear\" slope=\"0.09\"/></feComponentTransfer>\n  <feBlend in2=\"SourceGraphic\" mode=\"multiply\"/>\n</filter>\n</defs><g filter=\"url(#cr)\"><rect x=\"-12\" y=\"-12\" width=\"424\" height=\"324\" fill=\"#F3E0C2\"/><circle cx=\"27\" cy=\"22\" r=\"4\" fill=\"#E7CFA6\" opacity=\".5\"/><circle cx=\"90\" cy=\"63\" r=\"4\" fill=\"#E7CFA6\" opacity=\".5\"/><circle cx=\"153\" cy=\"104\" r=\"4\" fill=\"#E7CFA6\" opacity=\".5\"/><circle cx=\"216\" cy=\"145\" r=\"4\" fill=\"#E7CFA6\" opacity=\".5\"/><circle cx=\"279\" cy=\"186\" r=\"4\" fill=\"#E7CFA6\" opacity=\".5\"/><circle cx=\"342\" cy=\"27\" r=\"4\" fill=\"#E7CFA6\" opacity=\".5\"/><circle cx=\"5\" cy=\"68\" r=\"4\" fill=\"#E7CFA6\" opacity=\".5\"/><circle cx=\"68\" cy=\"109\" r=\"4\" fill=\"#E7CFA6\" opacity=\".5\"/><circle cx=\"131\" cy=\"150\" r=\"4\" fill=\"#E7CFA6\" opacity=\".5\"/><rect x=\"-12\" y=\"228\" width=\"424\" height=\"96\" fill=\"#C89B72\"/><rect x=\"-12\" y=\"221\" width=\"424\" height=\"9\" fill=\"#B0825C\"/><rect x=\"40\" y=\"120\" width=\"320\" height=\"12\" rx=\"6\" fill=\"#C08E68\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><g transform=\"translate(300,118)\"><path d=\"M-16,-30 h32 l-4,30 h-24z\" fill=\"#9CC7DE\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M16,-24 q12,4 0,16\" fill=\"none\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(160,272) scale(0.82,0.82)\" filter=\"url(#cr2)\"><ellipse cx=\"0\" cy=\"2\" rx=\"34\" ry=\"7\" fill=\"#6B5544\" opacity=\".13\"/><path d=\"M-26,-30 q-30,-6 -34,-30 q22,4 34,16z\" fill=\"#EFA063\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M-52,-54 q-8,-6 -8,-14 q10,4 12,10z\" fill=\"#FDF8F0\"/><path d=\"M-8,-96 L-24,-124 L-30,-92 Z\" fill=\"#EFA063\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M-13,-98 L-23,-116 L-26,-95 Z\" fill=\"#FDF8F0\"/><path d=\"M8,-96 L24,-124 L30,-92 Z\" fill=\"#EFA063\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M13,-98 L23,-116 L26,-95 Z\" fill=\"#FDF8F0\"/><ellipse cx=\"-13\" cy=\"-7\" rx=\"12\" ry=\"8\" fill=\"#EFA063\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"13\" cy=\"-7\" rx=\"12\" ry=\"8\" fill=\"#EFA063\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-38\" rx=\"25\" ry=\"30\" fill=\"#EFA063\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-30\" rx=\"15.0\" ry=\"18.0\" fill=\"#F6E7CE\" opacity=\".85\"/><ellipse cx=\"-23\" cy=\"-40\" rx=\"7\" ry=\"14\" fill=\"#EFA063\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\" transform=\"rotate(9 -23 -40)\"/><ellipse cx=\"23\" cy=\"-40\" rx=\"7\" ry=\"14\" fill=\"#EFA063\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\" transform=\"rotate(-9 23 -40)\"/><circle cx=\"0\" cy=\"-78\" r=\"27\" fill=\"#EFA063\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-67\" rx=\"14\" ry=\"10\" fill=\"#F6E7CE\" stroke=\"#6B5544\" stroke-width=\"1.4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-19\" cy=\"-71\" rx=\"6.5\" ry=\"4.5\" fill=\"#F3B9C1\" opacity=\".7\"/><ellipse cx=\"19\" cy=\"-71\" rx=\"6.5\" ry=\"4.5\" fill=\"#F3B9C1\" opacity=\".7\"/><circle cx=\"-10\" cy=\"-81\" r=\"4\" fill=\"#6B5544\"/><circle cx=\"10\" cy=\"-81\" r=\"4\" fill=\"#6B5544\"/><circle cx=\"-8.7\" cy=\"-82.5\" r=\"1.3\" fill=\"#fff\"/><circle cx=\"11.3\" cy=\"-82.5\" r=\"1.3\" fill=\"#fff\"/><path d=\"M-16,-89 q5,-2 9,1\" fill=\"none\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linecap=\"round\"/><path d=\"M16,-89 q-5,-2 -9,1\" fill=\"none\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linecap=\"round\"/><path d=\"M-4.5,-62 q4.5,-4.5 9,0\" fill=\"none\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linecap=\"round\"/><path d=\"M-3.8,-71 L3.8,-71 L0,-66.4 Z\" fill=\"#8A7259\"/></g><g transform=\"translate(268,258) scale(.75)\"><path d=\"M-40,0 l14,-26 l10,26z\" fill=\"#9CC7DE\" stroke=\"#6B5544\" stroke-width=\"2.4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M-6,2 l18,-22 l10,22z\" fill=\"#9CC7DE\" stroke=\"#6B5544\" stroke-width=\"2.4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g></g><rect width=\"400\" height=\"300\" filter=\"url(#grain)\" fill=\"#fff\" opacity=\".55\" style=\"mix-blend-mode:multiply\" pointer-events=\"none\"/></svg>"}, {"slug": "hedgehog-myself", "title": "我自己來", "en": "I CAN DO IT MYSELF", "desc": "小刺蝟豆豆最愛說「我自己來」。扣子會扣錯、鞋子會穿反、湯會灑出來——可是那天出門，媽媽發現扣子全都對了。", "tags": ["獨立", "自信", "生活"], "age": "3-5 歲", "mins": 4, "pages": 12, "href": "books/hedgehog-myself/index.html", "cover": "<svg viewBox=\"0 0 400 300\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><defs>\n<filter id=\"cr\" x=\"-6%\" y=\"-6%\" width=\"112%\" height=\"112%\">\n  <feTurbulence type=\"fractalNoise\" baseFrequency=\"0.045\" numOctaves=\"3\" seed=\"7\" result=\"n\"/>\n  <feDisplacementMap in=\"SourceGraphic\" in2=\"n\" scale=\"2.6\" xChannelSelector=\"R\" yChannelSelector=\"G\"/>\n</filter>\n<filter id=\"cr2\" x=\"-6%\" y=\"-6%\" width=\"112%\" height=\"112%\">\n  <feTurbulence type=\"fractalNoise\" baseFrequency=\"0.07\" numOctaves=\"2\" seed=\"19\" result=\"n2\"/>\n  <feDisplacementMap in=\"SourceGraphic\" in2=\"n2\" scale=\"1.8\" xChannelSelector=\"R\" yChannelSelector=\"G\"/>\n</filter>\n<filter id=\"grain\" x=\"0\" y=\"0\" width=\"100%\" height=\"100%\">\n  <feTurbulence type=\"fractalNoise\" baseFrequency=\"0.9\" numOctaves=\"2\" seed=\"3\" result=\"g\"/>\n  <feColorMatrix type=\"saturate\" values=\"0\"/>\n  <feComponentTransfer><feFuncA type=\"linear\" slope=\"0.09\"/></feComponentTransfer>\n  <feBlend in2=\"SourceGraphic\" mode=\"multiply\"/>\n</filter>\n</defs><g filter=\"url(#cr)\"><defs><linearGradient id=\"sk\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#BFD9EE\"/><stop offset=\"100%\" stop-color=\"#DCEAF5\"/></linearGradient></defs><rect x=\"-12\" y=\"-12\" width=\"424\" height=\"324\" fill=\"url(#sk)\"/><path d=\"M-12,210 q106,-18 212,-2 t212,-6 v114 H-12z\" fill=\"#A9CE8C\"/><g transform=\"translate(330,48)\"><path d=\"M38.0,0.0 L49.0,0.0\" stroke=\"#F7D678\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><path d=\"M26.9,26.9 L34.7,34.6\" stroke=\"#F7D678\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><path d=\"M0.0,38.0 L0.0,49.0\" stroke=\"#F7D678\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><path d=\"M-26.8,26.9 L-34.6,34.7\" stroke=\"#F7D678\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><path d=\"M-38.0,0.1 L-49.0,0.1\" stroke=\"#F7D678\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><path d=\"M-26.9,-26.8 L-34.7,-34.6\" stroke=\"#F7D678\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><path d=\"M-0.1,-38.0 L-0.1,-49.0\" stroke=\"#F7D678\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><path d=\"M26.8,-26.9 L34.6,-34.7\" stroke=\"#F7D678\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"0\" cy=\"0\" r=\"30\" fill=\"#F7D678\"/></g><g transform=\"translate(84,52) scale(0.9)\" opacity=\"0.9\"><circle cx=\"-19\" cy=\"0\" r=\"15\" fill=\"#FDF8F0\"/><circle cx=\"0\" cy=\"-8\" r=\"19\" fill=\"#FDF8F0\"/><circle cx=\"20\" cy=\"1\" r=\"14\" fill=\"#FDF8F0\"/><rect x=\"-19\" y=\"-4\" width=\"40\" height=\"18\" rx=\"9\" fill=\"#FDF8F0\"/></g><g transform=\"translate(52,226) scale(0.85)\"><rect x=\"-8\" y=\"-42\" width=\"16\" height=\"46\" rx=\"7\" fill=\"#C08E68\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"0\" cy=\"-60\" r=\"31\" fill=\"#A9CE8C\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"-21\" cy=\"-45\" r=\"21\" fill=\"#8FB874\" stroke=\"#6B5544\" stroke-width=\"1.7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"22\" cy=\"-47\" r=\"22\" fill=\"#A9CE8C\" stroke=\"#6B5544\" stroke-width=\"1.7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(340,264) scale(0.7)\"><path d=\"M0,0 q-3,18 0,26\" stroke=\"#7BA463\" stroke-width=\"3\" fill=\"none\"/><circle cx=\"12.0\" cy=\"0.0\" r=\"7\" fill=\"#F3B9C1\"/><circle cx=\"3.7\" cy=\"11.4\" r=\"7\" fill=\"#F3B9C1\"/><circle cx=\"-9.7\" cy=\"7.1\" r=\"7\" fill=\"#F3B9C1\"/><circle cx=\"-9.7\" cy=\"-7.1\" r=\"7\" fill=\"#F3B9C1\"/><circle cx=\"3.7\" cy=\"-11.4\" r=\"7\" fill=\"#F3B9C1\"/><circle cx=\"0\" cy=\"0\" r=\"5.5\" fill=\"#F7D678\"/></g><g transform=\"translate(110,268) scale(0.6)\"><path d=\"M0,0 q-3,18 0,26\" stroke=\"#7BA463\" stroke-width=\"3\" fill=\"none\"/><circle cx=\"12.0\" cy=\"0.0\" r=\"7\" fill=\"#BCA8D6\"/><circle cx=\"3.7\" cy=\"11.4\" r=\"7\" fill=\"#BCA8D6\"/><circle cx=\"-9.7\" cy=\"7.1\" r=\"7\" fill=\"#BCA8D6\"/><circle cx=\"-9.7\" cy=\"-7.1\" r=\"7\" fill=\"#BCA8D6\"/><circle cx=\"3.7\" cy=\"-11.4\" r=\"7\" fill=\"#BCA8D6\"/><circle cx=\"0\" cy=\"0\" r=\"5.5\" fill=\"#F7D678\"/></g><g transform=\"translate(205,270) scale(0.88,0.88)\" filter=\"url(#cr2)\"><ellipse cx=\"0\" cy=\"2\" rx=\"34\" ry=\"7\" fill=\"#6B5544\" opacity=\".13\"/><circle cx=\"-27\" cy=\"-30\" r=\"7\" fill=\"#C7A882\" stroke=\"#6B5544\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"-21\" cy=\"-94\" r=\"6.5\" fill=\"#E3C9A8\" stroke=\"#6B5544\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"21\" cy=\"-94\" r=\"6.5\" fill=\"#E3C9A8\" stroke=\"#6B5544\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-13\" cy=\"-7\" rx=\"12\" ry=\"8\" fill=\"#E3C9A8\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"13\" cy=\"-7\" rx=\"12\" ry=\"8\" fill=\"#E3C9A8\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-38\" rx=\"25\" ry=\"30\" fill=\"#E3C9A8\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M-24,-22 l-7,-11 l7,10z\" fill=\"#C7A882\" stroke=\"#6B5544\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M-22,-38 l-7,-11 l7,10z\" fill=\"#C7A882\" stroke=\"#6B5544\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M-14,-52 l-7,-11 l7,10z\" fill=\"#C7A882\" stroke=\"#6B5544\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M-2,-58 l-7,-11 l7,10z\" fill=\"#C7A882\" stroke=\"#6B5544\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M10,-54 l7,-11 l7,10z\" fill=\"#C7A882\" stroke=\"#6B5544\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M20,-42 l7,-11 l7,10z\" fill=\"#C7A882\" stroke=\"#6B5544\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M25,-26 l7,-11 l7,10z\" fill=\"#C7A882\" stroke=\"#6B5544\" stroke-width=\"1.3\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-27\" cy=\"-54\" rx=\"7\" ry=\"15\" fill=\"#E3C9A8\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\" transform=\"rotate(-42 -27 -54)\"/><ellipse cx=\"27\" cy=\"-54\" rx=\"7\" ry=\"15\" fill=\"#E3C9A8\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\" transform=\"rotate(42 27 -54)\"/><circle cx=\"0\" cy=\"-78\" r=\"27\" fill=\"#E3C9A8\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-67\" rx=\"14\" ry=\"10\" fill=\"#F6E7CE\" stroke=\"#6B5544\" stroke-width=\"1.4\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-19\" cy=\"-71\" rx=\"6.5\" ry=\"4.5\" fill=\"#F3B9C1\" opacity=\".7\"/><ellipse cx=\"19\" cy=\"-71\" rx=\"6.5\" ry=\"4.5\" fill=\"#F3B9C1\" opacity=\".7\"/><path d=\"M-14.5,-80 q4.5,-6.5 9,0\" fill=\"none\" stroke=\"#6B5544\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M5.5,-80 q4.5,-6.5 9,0\" fill=\"none\" stroke=\"#6B5544\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M-5,-65 q5,6.5 10,0\" fill=\"none\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linecap=\"round\"/><path d=\"M-3.8,-71 L3.8,-71 L0,-66.4 Z\" fill=\"#8A7259\"/></g><g transform=\"translate(290,120) scale(1.1)\"><path d=\"M0,-11 L2.6,-2.6 L11,0 L2.6,2.6 L0,11 L-2.6,2.6 L-11,0 L-2.6,-2.6 Z\" fill=\"#F7D678\"/></g><g transform=\"translate(120,150) scale(0.8)\"><path d=\"M0,-11 L2.6,-2.6 L11,0 L2.6,2.6 L0,11 L-2.6,2.6 L-11,0 L-2.6,-2.6 Z\" fill=\"#F7D678\"/></g><g transform=\"translate(300,180) scale(0.9)\"><ellipse cx=\"-7\" cy=\"-4\" rx=\"7\" ry=\"9\" fill=\"#BCA8D6\" stroke=\"#6B5544\" stroke-width=\"1.2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"7\" cy=\"-4\" rx=\"7\" ry=\"9\" fill=\"#BCA8D6\" stroke=\"#6B5544\" stroke-width=\"1.2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-5\" cy=\"6\" rx=\"5\" ry=\"6\" fill=\"#BCA8D6\" opacity=\".8\"/><ellipse cx=\"5\" cy=\"6\" rx=\"5\" ry=\"6\" fill=\"#BCA8D6\" opacity=\".8\"/><rect x=\"-1.5\" y=\"-8\" width=\"3\" height=\"18\" rx=\"1.5\" fill=\"#6B5544\"/></g></g><rect width=\"400\" height=\"300\" filter=\"url(#grain)\" fill=\"#fff\" opacity=\".55\" style=\"mix-blend-mode:multiply\" pointer-events=\"none\"/></svg>"}, {"slug": "elephant-water", "title": "小象的一鼻子水", "en": "THE ELEPHANT'S LAST WATER", "desc": "那年夏天好久沒下雨。小象嘟嘟吸滿了最後一窪水要帶回家，一路上卻遇見了口渴的小鳥、走不動的烏龜，和一株快枯掉的小草。", "tags": ["善良", "分享", "同理"], "age": "5-7 歲", "mins": 5, "pages": 12, "href": "books/elephant-water/index.html", "cover": "<svg viewBox=\"0 0 400 300\" preserveAspectRatio=\"xMidYMid meet\" xmlns=\"http://www.w3.org/2000/svg\"><defs>\n<filter id=\"cr\" x=\"-6%\" y=\"-6%\" width=\"112%\" height=\"112%\">\n  <feTurbulence type=\"fractalNoise\" baseFrequency=\"0.045\" numOctaves=\"3\" seed=\"7\" result=\"n\"/>\n  <feDisplacementMap in=\"SourceGraphic\" in2=\"n\" scale=\"2.6\" xChannelSelector=\"R\" yChannelSelector=\"G\"/>\n</filter>\n<filter id=\"cr2\" x=\"-6%\" y=\"-6%\" width=\"112%\" height=\"112%\">\n  <feTurbulence type=\"fractalNoise\" baseFrequency=\"0.07\" numOctaves=\"2\" seed=\"19\" result=\"n2\"/>\n  <feDisplacementMap in=\"SourceGraphic\" in2=\"n2\" scale=\"1.8\" xChannelSelector=\"R\" yChannelSelector=\"G\"/>\n</filter>\n<filter id=\"grain\" x=\"0\" y=\"0\" width=\"100%\" height=\"100%\">\n  <feTurbulence type=\"fractalNoise\" baseFrequency=\"0.9\" numOctaves=\"2\" seed=\"3\" result=\"g\"/>\n  <feColorMatrix type=\"saturate\" values=\"0\"/>\n  <feComponentTransfer><feFuncA type=\"linear\" slope=\"0.09\"/></feComponentTransfer>\n  <feBlend in2=\"SourceGraphic\" mode=\"multiply\"/>\n</filter>\n</defs><g filter=\"url(#cr)\"><defs><linearGradient id=\"sk\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0%\" stop-color=\"#F0D9A8\"/><stop offset=\"100%\" stop-color=\"#F7E9C6\"/></linearGradient></defs><rect x=\"-12\" y=\"-12\" width=\"424\" height=\"324\" fill=\"url(#sk)\"/><path d=\"M-12,210 q106,-18 212,-2 t212,-6 v114 H-12z\" fill=\"#D6C48A\"/><g transform=\"translate(320,52)\"><path d=\"M40.0,0.0 L51.0,0.0\" stroke=\"#F7D678\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><path d=\"M28.3,28.3 L36.1,36.0\" stroke=\"#F7D678\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><path d=\"M0.0,40.0 L0.0,51.0\" stroke=\"#F7D678\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><path d=\"M-28.3,28.3 L-36.0,36.1\" stroke=\"#F7D678\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><path d=\"M-40.0,0.1 L-51.0,0.1\" stroke=\"#F7D678\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><path d=\"M-28.3,-28.2 L-36.1,-36.0\" stroke=\"#F7D678\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><path d=\"M-0.1,-40.0 L-0.1,-51.0\" stroke=\"#F7D678\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><path d=\"M28.2,-28.4 L36.0,-36.2\" stroke=\"#F7D678\" stroke-width=\"4.5\" stroke-linecap=\"round\"/><circle cx=\"0\" cy=\"0\" r=\"32\" fill=\"#F7D678\"/></g><g transform=\"translate(70,262) scale(0.9)\"><path d=\"M-30,4 L-36,-12 L-20,-30 L4,-34 L24,-22 L28,-4 Z\" fill=\"#B9BCC4\" stroke=\"#6B5544\" stroke-width=\"2\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M-20,-30 L-8,-14 L-30,4 L-36,-12 Z\" fill=\"#9A9EA9\" opacity=\".55\"/></g><g transform=\"translate(346,232) scale(0.8)\"><rect x=\"-8\" y=\"-42\" width=\"16\" height=\"46\" rx=\"7\" fill=\"#C08E68\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"0\" cy=\"-60\" r=\"31\" fill=\"#C9BC7E\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"-21\" cy=\"-45\" r=\"21\" fill=\"#B3A469\" stroke=\"#6B5544\" stroke-width=\"1.7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><circle cx=\"22\" cy=\"-47\" r=\"22\" fill=\"#C9BC7E\" stroke=\"#6B5544\" stroke-width=\"1.7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/></g><g transform=\"translate(190,272) scale(0.84,0.84)\" filter=\"url(#cr2)\"><ellipse cx=\"0\" cy=\"2\" rx=\"34\" ry=\"7\" fill=\"#6B5544\" opacity=\".13\"/><circle cx=\"-27\" cy=\"-30\" r=\"7\" fill=\"#A0A4AE\" stroke=\"#6B5544\" stroke-width=\"1.5\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M-20,-98 q-34,-10 -30,22 q4,22 28,14z\" fill=\"#A0A4AE\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M20,-98 q34,-10 30,22 q-4,22 -28,14z\" fill=\"#A0A4AE\" stroke=\"#6B5544\" stroke-width=\"1.8\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-13\" cy=\"-7\" rx=\"12\" ry=\"8\" fill=\"#B9BCC4\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"13\" cy=\"-7\" rx=\"12\" ry=\"8\" fill=\"#B9BCC4\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-38\" rx=\"25\" ry=\"30\" fill=\"#B9BCC4\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"0\" cy=\"-30\" rx=\"15.0\" ry=\"18.0\" fill=\"#F6E7CE\" opacity=\".85\"/><ellipse cx=\"-23\" cy=\"-40\" rx=\"7\" ry=\"14\" fill=\"#B9BCC4\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\" transform=\"rotate(9 -23 -40)\"/><ellipse cx=\"23\" cy=\"-40\" rx=\"7\" ry=\"14\" fill=\"#B9BCC4\" stroke=\"#6B5544\" stroke-width=\"1.6\" stroke-linejoin=\"round\" stroke-linecap=\"round\" transform=\"rotate(-9 23 -40)\"/><circle cx=\"0\" cy=\"-78\" r=\"27\" fill=\"#B9BCC4\" stroke=\"#6B5544\" stroke-width=\"1.9\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><path d=\"M-6,-72 q-2,26 8,34 q10,6 12,-4\" fill=\"none\" stroke=\"#B9BCC4\" stroke-width=\"11\" stroke-linecap=\"round\"/><path d=\"M-6,-72 q-2,26 8,34 q10,6 12,-4\" fill=\"none\" stroke=\"#6B5544\" stroke-width=\"1.7\" stroke-linejoin=\"round\" stroke-linecap=\"round\"/><ellipse cx=\"-19\" cy=\"-71\" rx=\"6.5\" ry=\"4.5\" fill=\"#F3B9C1\" opacity=\".7\"/><ellipse cx=\"19\" cy=\"-71\" rx=\"6.5\" ry=\"4.5\" fill=\"#F3B9C1\" opacity=\".7\"/><path d=\"M-14.5,-80 q4.5,-6.5 9,0\" fill=\"none\" stroke=\"#6B5544\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M5.5,-80 q4.5,-6.5 9,0\" fill=\"none\" stroke=\"#6B5544\" stroke-width=\"2.6\" stroke-linecap=\"round\"/></g><ellipse cx=\"248\" cy=\"238\" rx=\"6\" ry=\"8\" fill=\"#9CC7DE\"/><ellipse cx=\"262\" cy=\"252\" rx=\"4.5\" ry=\"6\" fill=\"#9CC7DE\"/><path d=\"M150,140.8 C136.8,127.6 139.2,115.6 150,122.8 C160.8,115.6 163.2,127.6 150,140.8 Z\" fill=\"#E8907F\" opacity=\".9\"/><g transform=\"translate(300,150) scale(0.9)\"><path d=\"M0,-11 L2.6,-2.6 L11,0 L2.6,2.6 L0,11 L-2.6,2.6 L-11,0 L-2.6,-2.6 Z\" fill=\"#F7D678\"/></g></g><rect width=\"400\" height=\"300\" filter=\"url(#grain)\" fill=\"#fff\" opacity=\".55\" style=\"mix-blend-mode:multiply\" pointer-events=\"none\"/></svg>"}];
+const MAIN_TAGS = ["勇氣", "親情", "學習", "認錯", "獨立", "善良"];
 const $=id=>document.getElementById(id);
 let active='全部';
-
-$('mark').innerHTML=`
-  <circle cx="60" cy="62" r="52" fill="#FFF3DF"/>
-  <circle cx="92" cy="30" r="11" fill="#F2C15C"/>
-  ${rabbit({x:60,y:106,s:.55,expr:'happy',arms:'up'})}`;
-
 function card(b,i){
-  const cover=(COVERS[b.cover]||COVERS.generic)();
-  return `<a class="card" href="${b.href}" style="animation-delay:${i*70}ms">
-    <div class="cover">
-      <svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid meet">${cover}</svg>
-      <span class="badge-age">${b.age}</span>
-      <span class="badge-audio">🔊 語音朗讀</span>
-    </div>
-    <div class="body">
-      <h2>${b.title}</h2>
-      <div class="en2">${b.en}</div>
-      <p>${b.desc}</p>
+  return `<a class="card" href="${b.href}" style="animation-delay:${i*60}ms">
+    <div class="cover">${b.cover}
+      <span class="badge-age">${b.age}</span><span class="badge-audio">🔊 語音朗讀</span></div>
+    <div class="body"><h2>${b.title}</h2><div class="en2">${b.en}</div><p>${b.desc}</p>
       <div class="tags">${b.tags.map((t,k)=>`<span class="tag t${k%3}">#${t}</span>`).join('')}</div>
       <div class="meta"><span>📖 ${b.pages} 頁</span><span>・</span><span>⏱ 約 ${b.mins} 分鐘</span>
-        <span class="go">開始閱讀 ›</span></div>
-    </div>
-  </a>`;
+        <span class="go">開始閱讀 ›</span></div></div></a>`;
 }
-
-const soonCard=`<div class="card soon"><div class="soon-in">
-  <span class="ico">🌱</span><b>更多繪本製作中</b>
-  <span>下一本正在畫封面、寫故事⋯⋯</span></div></div>`;
-
+const soonCard=`<div class="card soon"><div class="soon-in"><span class="ico">🌱</span>
+  <b>更多繪本製作中</b><span>下一本正在畫封面、寫故事⋯⋯</span></div></div>`;
 function render(){
   const list=active==='全部'?BOOKS:BOOKS.filter(b=>b.tags.includes(active));
-  $('grid').innerHTML = list.length
-    ? list.map(card).join('')+ (active==='全部'?soonCard:'')
+  $('grid').innerHTML=list.length
+    ? list.map(card).join('')+(active==='全部'?soonCard:'')
     : `<div class="empty">這個標籤下還沒有繪本 🐾</div>`;
 }
-
 function buildFilters(){
-  const tags=['全部',...new Set(BOOKS.flatMap(b=>b.tags))];
+  const tags=['全部',...MAIN_TAGS];
   $('filters').innerHTML=tags.map(t=>`<button class="chip ${t===active?'on':''}" data-t="${t}">${t==='全部'?'全部':'#'+t}</button>`).join('');
   $('filters').querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
     active=c.dataset.t;
@@ -317,10 +128,8 @@ function buildFilters(){
     render();
   });
 }
-
 $('count').textContent=`目前 ${BOOKS.length} 本繪本 ・ 持續增加中`;
-buildFilters();
-render();
+buildFilters(); render();
 </script>
 </body>
 </html>
